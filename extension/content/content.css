@@ -1,0 +1,3544 @@
+/* ==========================================================================
+   BetterMoodle - Universal Host Shell Stylesheet
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Semantic Design Tokens & Theme Parity (Scoped strictly to active Moodle)
+   -------------------------------------------------------------------------- */
+html[data-mp-active="true"],
+html[data-mp-active="true"][data-mp-theme="midnight"] {
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --bg-canvas: #09090b;
+  --bg-surface: #121215;
+  --bg-elevated: #18181c;
+  --bg-hover: #222228;
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --accent: #3b82f6;
+  --accent-fg: #ffffff;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  /* Solid fills that carry white text (>= 4.5:1) */
+  --success-solid: #047857;
+  --success-solid-fg: #ffffff;
+
+  --mp-bg: var(--bg-canvas);
+  --mp-surface: var(--bg-surface);
+  --mp-surface-2: var(--bg-elevated);
+  --mp-surface-hover: var(--bg-hover);
+  --mp-border: var(--border-subtle);
+  --mp-border-strong: var(--border-strong);
+  --mp-text: var(--text-primary);
+  --mp-text-muted: var(--text-secondary);
+  --mp-accent: var(--accent);
+  --mp-success: var(--success);
+  --mp-warning: var(--warning);
+  --mp-danger: var(--danger);
+  --mp-accent-fill: #2563eb;
+  --mp-text-rgb: 244, 244, 245;
+  --mp-surface-rgb: 18, 18, 21;
+  --mp-success-solid: var(--success-solid);
+  --mp-success-solid-fg: var(--success-solid-fg);
+  --mp-accent-tint: color-mix(in srgb, var(--mp-accent) 9%, transparent);
+  --mp-success-tint: color-mix(in srgb, var(--mp-success) 10%, transparent);
+  --mp-warning-tint: color-mix(in srgb, var(--mp-warning) 12%, transparent);
+  --mp-danger-tint: color-mix(in srgb, var(--mp-danger) 12%, transparent);
+  --mp-wallpaper-scrim: rgba(9, 9, 11, 0.82);
+  --mp-radius: 8px;
+  --mp-radius-inner: 4px;
+  --mp-font: var(--font-sans);
+  --mp-ui-scale: 1;
+}
+
+html[data-mp-active="true"][data-mp-theme="oled"] {
+  --bg-canvas: #000000;
+  --bg-surface: #0a0a0c;
+  --bg-elevated: #131317;
+  --bg-hover: #1c1c22;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-subtle: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --accent: #10b981;
+  --accent-fg: #03140d;
+  --mp-accent-fill: var(--mp-accent);
+  --mp-text-rgb: 248, 250, 252;
+  --mp-surface-rgb: 10, 10, 12;
+}
+
+html[data-mp-active="true"][data-mp-theme="catppuccin"] {
+  --bg-canvas: #11111b;
+  --bg-surface: #181825;
+  --bg-elevated: #1e1e2e;
+  --bg-hover: #313244;
+  --text-primary: #cdd6f4;
+  --text-secondary: #a6adc8;
+  --text-muted: #7f849c;
+  --border-subtle: #313244;
+  --border-strong: #45475a;
+  --accent: #89b4fa;
+  --accent-fg: #11111b;
+  --mp-accent-fill: var(--mp-accent);
+  --mp-text-rgb: 205, 214, 244;
+  --mp-surface-rgb: 24, 24, 37;
+}
+
+html[data-mp-active="true"][data-mp-theme="light"] {
+  --bg-canvas: #f4f4f5;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f8f8fa;
+  --bg-hover: #efeff2;
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --border-subtle: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --success: #047857;
+  --warning: #b45309;
+  --danger: #dc2626;
+  --success-solid: #047857;
+  --mp-accent-fill: var(--mp-accent);
+  --mp-text-rgb: 24, 24, 27;
+  --mp-surface-rgb: 255, 255, 255;
+  --mp-wallpaper-scrim: rgba(244, 244, 245, 0.86);
+}
+
+/* Native controls, scrollbars and form widgets follow the active preset (overhaul only) */
+html[data-mp-active="true"]:has(> body.mp-overhaul-active) {
+  color-scheme: dark;
+}
+html[data-mp-active="true"][data-mp-theme="light"]:has(> body.mp-overhaul-active) {
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   2. Global App Shell Replacement & Base Resets
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active {
+  background-color: var(--mp-bg) !important;
+  background-image: none !important;
+  color: var(--mp-text) !important;
+  font-family: var(--mp-font) !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+  overflow-x: hidden !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.mp-has-wallpaper {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active *:focus-visible {
+  outline: 2px solid var(--mp-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Hide default Moodle chrome */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active nav.navbar.fixed-top,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .drawer-toggles,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .drawer.drawer-left,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .drawer.drawer-right,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #page-footer,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .btn-footer-popover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .footer-popover {
+  display: none !important;
+}
+
+/* Reset Moodle page wrappers (excluding SuperVideo & Login pages) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page-wrapper,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page.drawers,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #topofscroll,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) .main-inner,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #region-main-box,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #region-main {
+  background: transparent !important;
+  color: var(--mp-text) !important;
+  max-width: none !important;
+  width: auto !important;
+  height: auto !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]):not([data-mp-nav="topbar"]) #page.drawers,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]):not([data-mp-nav="topbar"]) #page {
+  margin-top: 0 !important;
+  margin-left: calc(244px * var(--mp-ui-scale, 1)) !important;
+  padding: 16px 24px 64px 24px !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"])[data-mp-nav="topbar"] #page.drawers,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"])[data-mp-nav="topbar"] #page {
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+  padding: calc(48px * var(--mp-ui-scale, 1) + 16px) 24px 64px 24px !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #topofscroll,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) .main-inner,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #region-main {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 960px) {
+  /* [data-mp-nav] matches the extra :not([data-mp-nav="topbar"]) of the desktop rule so this override actually wins */
+  :where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"])[data-mp-nav] #page.drawers,
+  :where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"])[data-mp-nav] #page {
+    margin-left: 0 !important;
+    padding: calc(48px * var(--mp-ui-scale, 1) + 12px) 12px 64px 12px !important;
+  }
+}
+
+/* Native Moodle component parity overrides & In-Page Session Modals */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .card,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .block.card,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .box.generalbox,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .submissionstatustable,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .generaltable,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .que .formulation,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .forumpost,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active [data-region="modal-container"] .modal-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base .moodle-dialogue-wrap {
+  background-color: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  color: var(--mp-text) !important;
+  box-shadow: none !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .modal-header,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .modal-footer,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base .moodle-dialogue-hd {
+  background-color: var(--mp-surface-2) !important;
+  border-color: var(--mp-border) !important;
+  color: var(--mp-text) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .modal-header .close,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .modal-header .btn-close {
+  color: var(--mp-text) !important;
+  opacity: 0.85 !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active h1,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active h2,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active h3,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active h4,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active h5,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active h6,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .h1,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .h2,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .h3,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .h4,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .h5 {
+  color: var(--mp-text) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active a {
+  color: var(--mp-accent);
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .text-muted,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .muted,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .dimmed_text {
+  color: var(--mp-text-muted) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .table,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .table th,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .table td {
+  color: var(--mp-text) !important;
+  border-color: var(--mp-border) !important;
+  background-color: transparent !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .table-striped tbody tr:nth-of-type(odd),
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .generaltable tbody tr:nth-of-type(odd) {
+  background-color: var(--mp-surface-2) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-control,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .custom-select,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active select,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active input[type="text"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active input[type="password"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active input[type="email"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active input[type="search"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active textarea {
+  background-color: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+  border-radius: var(--mp-radius-inner) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .dropdown-menu {
+  background-color: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+  border-radius: var(--mp-radius) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .dropdown-item {
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .dropdown-item:hover {
+  background-color: var(--mp-surface-hover) !important;
+}
+
+/* Course Secondary Navigation Overhaul */
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation {
+  background-color: var(--mp-course-nav-bg, var(--mp-surface)) !important;
+  background-image: none !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 6px 8px 6px 10px !important;
+  margin: 0 0 12px 0 !important;
+  max-width: 100% !important;
+  min-height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation nav,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .moremenu,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .navigation {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .nav-tabs,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .more-nav,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation ul {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  list-style: none !important;
+  gap: 6px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .nav-item,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation li {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .nav-tabs .nav-link,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .more-nav .nav-link {
+  color: var(--mp-text-muted) !important;
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--mp-radius-inner) !important;
+  height: 34px !important;
+  padding: 0 12px !important;
+  margin: 0 !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease, transform 60ms ease-out !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .nav-tabs .nav-link:hover,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .more-nav .nav-link:hover {
+  color: var(--mp-text) !important;
+  background-color: var(--mp-surface-2) !important;
+  border-color: var(--mp-border-strong) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .nav-link:active {
+  transform: scale(0.97) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .nav-tabs .nav-link.active,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .more-nav .nav-link.active,
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .nav-link[aria-current="page"] {
+  color: var(--accent-fg) !important;
+  background-color: var(--mp-accent-fill) !important;
+  border-color: transparent !important;
+  border-bottom: none !important;
+  font-weight: 600 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .mp-cnav-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  line-height: 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .secondary-navigation .mp-cnav-text {
+  line-height: 1 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-course-nav="icons"] .secondary-navigation .nav-link:not(.dropdown-toggle):not([data-mp-nav-key="other"]) {
+  width: 36px !important;
+  padding: 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-course-nav="icons"] .secondary-navigation .nav-link:not(.dropdown-toggle):not([data-mp-nav-key="other"]) .mp-cnav-text {
+  display: none !important;
+}
+
+/* Unclassified tabs (activity settings, reports, plugins) would all share one generic
+   icon, so they keep their label even in icons-only mode */
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-course-nav="icons"] .secondary-navigation .nav-link[data-mp-nav-key="other"] .mp-cnav-icon {
+  display: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-course-nav="text"] .secondary-navigation .nav-link .mp-cnav-icon {
+  display: none !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active ::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active ::-webkit-scrollbar-track {
+  background: var(--mp-bg);
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active ::-webkit-scrollbar-thumb {
+  background: var(--mp-border-strong);
+  border-radius: 99px;
+}
+
+/* --------------------------------------------------------------------------
+   2B. Single UI-scale zoom root, in-flow customize trigger & native Moodle
+       component parity (sub-pages, alerts, badges, pagination, tables)
+   -------------------------------------------------------------------------- */
+/* One zoom root so every page region (hub, hero, sections, sub-page tables,
+   buttons, headings) scales together instead of per-component */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #topofscroll,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page:not(:has(#topofscroll)) > #page-content {
+  zoom: var(--mp-ui-scale, 1);
+}
+
+/* Customize trigger host, mounted in-flow at the end of the active anchor row */
+:where(html[data-mp-active="true"]) #mp-trigger-host {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* Sub-page native header (Participants, Grades, Competencies, Activities...) as a hero card */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-my):not(.path-my-courses):not([data-mp-page="course"]):not(.mp-mod-has-header):not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page-header {
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 12px 14px !important;
+  margin: 0 0 12px 0 !important;
+  max-width: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-my):not(.path-my-courses):not([data-mp-page="course"]):not(.mp-mod-has-header):not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page-header h1,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-my):not(.path-my-courses):not([data-mp-page="course"]):not(.mp-mod-has-header):not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #page-header .h2 {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+}
+
+/* Tertiary navigation (report/selector rows on course sub-pages) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .navitem,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .row {
+  margin: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .navitem-divider {
+  display: none !important;
+}
+
+/* Breadcrumbs */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .breadcrumb {
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 0 6px 0 !important;
+  font-size: 12px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .breadcrumb-item,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .breadcrumb-item + .breadcrumb-item::before {
+  color: var(--mp-text-muted) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .breadcrumb-item a {
+  color: var(--mp-text-muted) !important;
+  text-decoration: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .breadcrumb-item a:hover {
+  color: var(--mp-accent) !important;
+}
+
+/* Surface utilities, card chrome, table heads, list groups, popovers */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .bg-white,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .bg-light,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .card-header,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .card-footer,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .input-group-text,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .table thead th,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .generaltable thead th,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .generaltable th.header {
+  background-color: var(--mp-surface-2) !important;
+  border-color: var(--mp-border) !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .text-dark,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .text-body {
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .list-group-item {
+  background-color: var(--mp-surface) !important;
+  border-color: var(--mp-border) !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .list-group-item-action:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .table-hover tbody tr:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .generaltable tbody tr:hover {
+  background-color: var(--mp-surface-hover) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .list-group-item.active {
+  background-color: var(--mp-accent-fill) !important;
+  border-color: var(--mp-accent-fill) !important;
+  color: var(--accent-fg) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .popover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .popover-body,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .popover-header {
+  background-color: var(--mp-surface) !important;
+  border-color: var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-control:focus,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .custom-select:focus,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-select:focus {
+  border-color: var(--mp-accent) !important;
+  box-shadow: 0 0 0 2px var(--mp-accent-tint) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-control:disabled,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-control[readonly] {
+  background-color: var(--mp-surface) !important;
+  color: var(--mp-text-muted) !important;
+}
+
+/* Bootstrap badges (completion conditions, status labels) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge {
+  border-radius: var(--mp-radius-inner) !important;
+  font-weight: 600 !important;
+  font-variant-numeric: tabular-nums;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-light,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge.bg-light,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-secondary,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge.bg-secondary {
+  background-color: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-success,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge.bg-success {
+  background-color: var(--mp-success-tint) !important;
+  border: 1px solid color-mix(in srgb, var(--mp-success) 45%, transparent) !important;
+  color: var(--mp-success) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-danger,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge.bg-danger {
+  background-color: var(--mp-danger-tint) !important;
+  border: 1px solid color-mix(in srgb, var(--mp-danger) 45%, transparent) !important;
+  color: var(--mp-danger) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-warning,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge.bg-warning {
+  background-color: var(--mp-warning-tint) !important;
+  border: 1px solid color-mix(in srgb, var(--mp-warning) 45%, transparent) !important;
+  color: var(--mp-warning) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-info,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-primary,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge.bg-info,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge.bg-primary {
+  background-color: var(--mp-accent-tint) !important;
+  border: 1px solid color-mix(in srgb, var(--mp-accent) 45%, transparent) !important;
+  color: var(--mp-accent) !important;
+}
+
+/* Alerts & notifications */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert {
+  background-color: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  color: var(--mp-text) !important;
+  font-size: 12.5px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert-info,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert-primary {
+  background-color: var(--mp-accent-tint) !important;
+  border-color: color-mix(in srgb, var(--mp-accent) 40%, transparent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert-success {
+  background-color: var(--mp-success-tint) !important;
+  border-color: color-mix(in srgb, var(--mp-success) 40%, transparent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert-warning {
+  background-color: var(--mp-warning-tint) !important;
+  border-color: color-mix(in srgb, var(--mp-warning) 40%, transparent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert-danger {
+  background-color: var(--mp-danger-tint) !important;
+  border-color: color-mix(in srgb, var(--mp-danger) 40%, transparent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert a,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert .alert-link {
+  color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert .close,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .alert .btn-close {
+  color: var(--mp-text) !important;
+  opacity: 0.8 !important;
+}
+
+/* Pagination & initials bar (Participants) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .pagination .page-link {
+  background-color: var(--mp-surface-2) !important;
+  border-color: var(--mp-border) !important;
+  color: var(--mp-text) !important;
+  font-variant-numeric: tabular-nums;
+  box-shadow: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .pagination .page-link:hover {
+  background-color: var(--mp-surface-hover) !important;
+  border-color: var(--mp-border-strong) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .pagination .page-item.active .page-link {
+  background-color: var(--mp-accent-fill) !important;
+  border-color: var(--mp-accent-fill) !important;
+  color: var(--accent-fg) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .pagination .page-item.disabled .page-link {
+  background-color: var(--mp-surface) !important;
+  color: var(--mp-text-muted) !important;
+}
+
+/* Non-secondary tab strips (activity sub-tabs, report tabs) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .nav-tabs {
+  border-bottom-color: var(--mp-border) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .nav-tabs .nav-link {
+  color: var(--mp-text-muted) !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .nav-tabs .nav-link:hover {
+  color: var(--mp-text) !important;
+  border-color: var(--mp-border) var(--mp-border) transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .nav-tabs .nav-link.active {
+  color: var(--mp-text) !important;
+  background: var(--mp-surface) !important;
+  border-color: var(--mp-border) var(--mp-border) var(--mp-surface) !important;
+}
+
+/* Secondary-style buttons Moodle renders outside .singlebutton */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-outline-secondary,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-light,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-outline-primary {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+  box-shadow: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-outline-secondary:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-light:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-outline-primary:hover {
+  background: var(--mp-surface-hover) !important;
+  border-color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .btn-link {
+  color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .btn:active {
+  transform: scale(0.97);
+}
+
+/* Grade report level shading (user report) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-grade .levelodd,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-grade .leveleven,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-grade td.column-itemname,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-grade th.column-itemname {
+  background-color: transparent !important;
+  color: var(--mp-text) !important;
+  border-color: var(--mp-border) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-grade tr.level1 > th,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-grade tr.level1 > td,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-grade .category {
+  background-color: var(--mp-surface-2) !important;
+}
+
+/* Activity information / completion conditions block (all activity pages) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .activity-information,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active [data-region="activity-information"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .completion-info {
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .automatic-completion-conditions .badge,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .completion-info .badge {
+  white-space: normal !important;
+  text-align: left !important;
+}
+
+/* SuperVideo: completion box in normal flow below the player, themed and readable */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo .activity-information,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo [data-region="activity-information"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo .completion-info,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #completion-info {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 1160px !important;
+  margin: 12px auto 0 !important;
+  padding: 10px 12px !important;
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  box-shadow: none !important;
+  color: var(--mp-text) !important;
+  font-size: 12px !important;
+  z-index: auto !important;
+  opacity: 1 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo .activity-information *,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo [data-region="activity-information"] *,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo .completion-info * {
+  color: inherit;
+}
+
+/* Structural headings inside Moodle pages follow the dashboard type scale
+   (14-16px bold); teacher-authored content keeps its own heading sizes */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #region-main h2:not(:is(.no-overflow, .text_to_html, .description, .summary, .activity-description, .course-description-item, .forumpost, .que) *),
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #region-main .h2:not(:is(.no-overflow, .text_to_html, .description, .summary, .activity-description, .course-description-item, .forumpost, .que) *) {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  margin: 16px 0 8px 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #region-main h3:not(:is(.no-overflow, .text_to_html, .description, .summary, .activity-description, .course-description-item, .forumpost, .que) *):not(.sectionname),
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not(.path-mod-supervideo):not(.path-login):not(.pagelayout-login):not([data-mp-page="login"]) #region-main h4:not(:is(.no-overflow, .text_to_html, .description, .summary, .activity-description, .course-description-item, .forumpost, .que) *) {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+}
+
+/* Course section lists: no bullets/indent regardless of course format */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .course-content ul.topics,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .course-content ul.weeks,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .course-content ul.section,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .course-content ul.sections {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Native data tables (participants, grades, reports) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.generaltable {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  font-size: 12.5px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.generaltable th,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.generaltable td {
+  padding: 8px 12px !important;
+  border-color: var(--mp-border) !important;
+  vertical-align: middle !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.generaltable thead th {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--mp-text-muted) !important;
+  border-bottom: 1px solid var(--mp-border) !important;
+}
+
+/* Tertiary selectors share the 30px control height of the button row */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .custom-select,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .form-select,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation select,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .btn,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .dropdown-toggle {
+  height: 30px !important;
+  min-height: 30px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 12px !important;
+  line-height: 28px !important;
+}
+
+/* Action button rows never touch the following heading/table */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .singlebutton,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .submissionaction {
+  margin: 4px 0 8px 0 !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo :is(.activity-information, [data-region="activity-information"]) :is(.completion-info, [data-region="completion-info"]) {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  max-width: none !important;
+}
+
+/* Popper measures zoomed boxes twice, so at a non-100% UI scale in-content
+   dropdown menus are anchored statically to their toggle instead */
+html[data-mp-active="true"][data-mp-scaled="true"] body.mp-overhaul-active :is(#topofscroll, #page-content) .dropdown-menu:is([x-placement], [data-popper-placement]) {
+  transform: none !important;
+  inset: auto !important;
+  top: 100% !important;
+  left: 0 !important;
+  margin-top: 2px !important;
+  will-change: auto !important;
+}
+html[data-mp-active="true"][data-mp-scaled="true"] body.mp-overhaul-active :is(#topofscroll, #page-content) .dropdown-menu:is(.dropdown-menu-right, .dropdown-menu-end):is([x-placement], [data-popper-placement]) {
+  left: auto !important;
+  right: 0 !important;
+}
+html[data-mp-active="true"][data-mp-scaled="true"] body.mp-overhaul-active :is(#topofscroll, #page-content) .dropdown-menu:is([x-placement^="top"], [data-popper-placement^="top"]) {
+  top: auto !important;
+  bottom: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 2px !important;
+}
+
+/* --------------------------------------------------------------------------
+   2C. Bootstrap 5 (Moodle 4.4+/5.x) variable bridge
+   Moodle 5 components read --bs-* variables (borders, card/table fills,
+   secondary surfaces, stripes). Map them once to the active preset so every
+   native component follows the theme instead of light Bootstrap defaults.
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active {
+  --bs-body-color: var(--mp-text);
+  --bs-body-color-rgb: var(--mp-text-rgb);
+  --bs-body-bg: var(--mp-surface);
+  --bs-body-bg-rgb: var(--mp-surface-rgb);
+  --bs-emphasis-color: var(--mp-text);
+  --bs-emphasis-color-rgb: var(--mp-text-rgb);
+  --bs-secondary-color: var(--mp-text-muted);
+  --bs-secondary-bg: var(--mp-surface-2);
+  --bs-secondary-bg-rgb: var(--mp-surface-rgb);
+  --bs-tertiary-color: var(--mp-text-muted);
+  --bs-tertiary-bg: var(--mp-surface-2);
+  --bs-tertiary-bg-rgb: var(--mp-surface-rgb);
+  --bs-heading-color: var(--mp-text);
+  --bs-border-color: var(--mp-border);
+  --bs-border-color-translucent: var(--mp-border);
+  --bs-light: var(--mp-surface-2);
+  --bs-light-rgb: var(--mp-surface-rgb);
+  --bs-link-color: var(--mp-accent);
+  --bs-link-hover-color: var(--mp-accent);
+  --bs-focus-ring-color: var(--mp-accent-tint);
+}
+:where(html[data-mp-active="true"]):has(> body.mp-overhaul-active) {
+  background-color: var(--mp-bg) !important;
+}
+
+/* Bootstrap 5 tables: painted surface, subtle stripes, no light cell fills */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.generaltable,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.table {
+  --bs-table-bg: var(--mp-surface);
+  --bs-table-color: var(--mp-text);
+  --bs-table-border-color: var(--mp-border);
+  --bs-table-striped-bg: var(--mp-surface-2);
+  --bs-table-striped-color: var(--mp-text);
+  --bs-table-hover-bg: var(--mp-surface-hover);
+  --bs-table-hover-color: var(--mp-text);
+  --bs-table-accent-bg: transparent;
+  background-color: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.generaltable tbody tr:nth-of-type(even),
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.table tbody tr:nth-of-type(even) {
+  background-color: transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.generaltable > :not(caption) > * > *,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main table.table > :not(caption) > * > * {
+  box-shadow: none !important;
+}
+
+/* Report / activity containers that ship light Bootstrap fills */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .user-report-container,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .activity-header .activity-details,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .activity-details {
+  background-color: transparent !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #intro .box.generalbox,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .activity-description .box.generalbox {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .fileuploadsubmission img.icon {
+  display: none !important;
+}
+
+/* Form controls inside pages follow the 13px / 32px control scale */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main :is(.form-select, .custom-select, select.select, select.form-control, input.form-control:not([type="checkbox"]):not([type="radio"])) {
+  font-size: 13px !important;
+  min-height: 32px !important;
+  height: auto !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  line-height: 1.4 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main textarea.form-control {
+  font-size: 13px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .btn-link {
+  font-size: 13px !important;
+  text-decoration: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .btn.text-reset[data-filteraction="remove"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .icon-size-4.btn {
+  color: var(--mp-text-muted) !important;
+}
+
+/* Avatar initials (participants, grade report, user headers) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .userinitials {
+  background-color: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text-muted) !important;
+  font-weight: 600 !important;
+}
+
+/* Tertiary "select menu" (grade report switcher) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation .select-menu .dropdown-toggle,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .tertiary-navigation-selector .dropdown-toggle {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+  border-radius: var(--mp-radius-inner) !important;
+}
+
+/* Autocomplete (competency / tag filters) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-autocomplete-selection .badge,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-autocomplete-selection [role="option"] {
+  box-shadow: none !important;
+  outline: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-autocomplete-selection [data-active-selection="true"] {
+  box-shadow: 0 0 0 2px var(--mp-accent-tint) !important;
+  border-color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .form-autocomplete-downarrow {
+  color: var(--mp-text-muted) !important;
+}
+
+/* Collapse toggles outside course sections (activities overview, reports) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .icons-collapse-expand {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text-muted) !important;
+  border-radius: var(--mp-radius-inner) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .collapsable-section {
+  background: var(--mp-surface) !important;
+  border-color: var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+}
+
+/* Activity icon frame wins over Moodle 5 purpose-specific icon rules */
+html[data-mp-active="true"] body.mp-overhaul-active #region-main .activityiconcontainer {
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-radius: var(--mp-radius-inner) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .activitybadge,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .badge-none {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border) !important;
+  color: var(--mp-text-muted) !important;
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  padding: 2px 6px !important;
+}
+
+/* Activity header spans the content column like every other card */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .activity-header {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Search / submit icon buttons that ship a light Bootstrap fill */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main :is(.btn-submit, .search-icon, .input-group > .btn:not(.btn-primary)) {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+}
+
+/* Folder trees: no bullets, readable rows */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .foldertree,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .foldertree ul {
+  list-style: none !important;
+  padding-left: 14px !important;
+  margin: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .foldertree > li {
+  padding-left: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .foldertree p {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 4px 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .foldertree a {
+  font-weight: 500 !important;
+}
+
+/* Moodle's grey file/activity icons are drawn for light pages; lift them on dark presets */
+html[data-mp-active="true"]:not([data-mp-theme="light"]) body.mp-overhaul-active #region-main :is(.foldertree img.icon, img.itemicon, .gradeitemheader img.icon, .ygtvcontent img.icon) {
+  filter: invert(0.85) hue-rotate(180deg);
+}
+
+/* Customize trigger inside a native page header card (calendar, profile, reports) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #page-header:has(> #mp-trigger-host) {
+  position: relative !important;
+  padding-right: 150px !important;
+  min-height: 56px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #page-header > #mp-trigger-host {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  margin: 0;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #page-header :is(.btn-light, .btn-outline-secondary, .btn-secondary) {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+  font-size: 12px !important;
+  box-shadow: none !important;
+}
+
+/* Folder module YUI tree: drop legacy connector graphics, keep readable file rows */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .filemanager :is(.ygtvtn, .ygtvtm, .ygtvtmh, .ygtvtp, .ygtvtph, .ygtvln, .ygtvlm, .ygtvlmh, .ygtvlp, .ygtvlph, .ygtvdepthcell, .ygtvblankdepthcell) {
+  background: none !important;
+  width: 4px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .filemanager :is(.ygtvtable, .ygtvtable td) {
+  background: transparent !important;
+  border: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active #region-main .filemanager .ygtvcontent {
+  padding: 3px 0 !important;
+}
+html[data-mp-active="true"]:not([data-mp-theme="light"]) body.mp-overhaul-active #region-main .filemanager img.icon {
+  filter: invert(0.85) hue-rotate(180deg);
+}
+
+/* --------------------------------------------------------------------------
+   3. Persistent Sidebar & Topbar Navigation
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) #mp-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 244px;
+  height: calc(100vh / var(--mp-ui-scale, 1));
+  zoom: var(--mp-ui-scale, 1);
+  background: var(--mp-surface);
+  border-right: 1px solid var(--mp-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 10000;
+  transition: transform 180ms ease-out;
+}
+
+:where(html[data-mp-active="true"]) body[data-mp-nav="topbar"] #mp-sidebar {
+  display: none;
+}
+
+:where(html[data-mp-active="true"]) #mp-mobile-topbar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  zoom: var(--mp-ui-scale, 1);
+  background: var(--mp-surface);
+  border-bottom: 1px solid var(--mp-border);
+  z-index: 10001;
+  padding: 0 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+:where(html[data-mp-active="true"]) body[data-mp-nav="topbar"] #mp-mobile-topbar {
+  display: flex;
+}
+
+:where(html[data-mp-active="true"]) .mp-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-topbar-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 960px) {
+  :where(html[data-mp-active="true"]) #mp-mobile-topbar {
+    display: flex;
+  }
+  :where(html[data-mp-active="true"]) #mp-sidebar {
+    transform: translateX(-100%);
+    z-index: 10005;
+  }
+  :where(html[data-mp-active="true"]) #mp-sidebar.mp-sidebar-open {
+    display: flex;
+    transform: translateX(0);
+  }
+  :where(html[data-mp-active="true"]) body[data-mp-nav="topbar"] #mp-sidebar.mp-sidebar-open {
+    display: flex;
+  }
+}
+
+:where(html[data-mp-active="true"]) .mp-sidebar-brand {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--mp-border);
+}
+
+:where(html[data-mp-active="true"]) .mp-brand-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none !important;
+  min-width: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-brand-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--mp-radius-inner);
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mp-text);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-brand-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--mp-text);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:where(html[data-mp-active="true"]) .mp-brand-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mp-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:where(html[data-mp-active="true"]) .mp-sidebar-nav {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-bottom: 1px solid var(--mp-border);
+}
+
+:where(html[data-mp-active="true"]) .mp-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: var(--mp-radius-inner);
+  color: var(--mp-text-muted) !important;
+  font-weight: 500;
+  font-size: 13px;
+  text-decoration: none !important;
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+:where(html[data-mp-active="true"]) .mp-nav-link:hover,
+:where(html[data-mp-active="true"]) .mp-nav-link.active {
+  background: var(--mp-surface-2);
+  color: var(--mp-text) !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-nav-link.active {
+  box-shadow: inset 2px 0 0 var(--mp-accent);
+  color: var(--mp-text) !important;
+  font-weight: 600;
+}
+
+:where(html[data-mp-active="true"]) .mp-sidebar-courses-hdr {
+  padding: 10px 12px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mp-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+:where(html[data-mp-active="true"]) #mp-sb-course-count {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+:where(html[data-mp-active="true"]) .mp-sidebar-courses {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+:where(html[data-mp-active="true"]) .mp-sb-course-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--mp-radius-inner);
+  border: 1px solid transparent;
+  color: var(--mp-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+
+:where(html[data-mp-active="true"]) .mp-sb-course-item:hover,
+:where(html[data-mp-active="true"]) .mp-sb-course-item.active {
+  background: var(--mp-surface-2);
+  color: var(--mp-text);
+}
+
+:where(html[data-mp-active="true"]) .mp-sb-course-item.active {
+  border-color: var(--mp-border-strong);
+  box-shadow: inset 2px 0 0 var(--mp-accent);
+}
+
+:where(html[data-mp-active="true"]) .mp-sb-course-link {
+  flex: 1;
+  min-width: 0;
+  color: inherit !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:where(html[data-mp-active="true"]) .mp-sb-pin {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mp-text-muted);
+  opacity: 0.7;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+:where(html[data-mp-active="true"]) .mp-sb-pin:hover,
+:where(html[data-mp-active="true"]) .mp-sb-pin.pinned {
+  opacity: 1;
+  color: var(--mp-warning);
+}
+
+:where(html[data-mp-active="true"]) .mp-sidebar-footer {
+  padding: 8px;
+  border-top: 1px solid var(--mp-border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Custom Dashboard Workspace (#mp-overhaul-dashboard)
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my #page-header,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my .block_recentlyaccessedcourses,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my .block_calendar_upcoming,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my .block_calendar_month,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my .block_timeline,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my .block_myoverview,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my [data-region="courses-view"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my-courses #page-header,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my-courses .block_calendar_month,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-my-courses .block_myoverview {
+  display: none !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-dashboard-hub {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+:where(html[data-mp-active="true"]) .mp-hub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+}
+
+
+:where(html[data-mp-active="true"]) .mp-hub-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--mp-text);
+}
+
+:where(html[data-mp-active="true"]) .mp-hub-subtitle {
+  font-size: 12px;
+  color: var(--mp-text-muted);
+  margin: 2px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+:where(html[data-mp-active="true"]) .mp-hub-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+:where(html[data-mp-active="true"]) .mp-view-toggles {
+  display: inline-flex;
+  background: var(--mp-surface-2);
+  padding: 2px;
+  border-radius: var(--mp-radius-inner);
+  border: 1px solid var(--mp-border);
+  gap: 2px;
+}
+
+:where(html[data-mp-active="true"]) .mp-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: var(--mp-text-muted);
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 120ms ease-out, color 120ms ease-out, transform 60ms ease-out;
+}
+
+:where(html[data-mp-active="true"]) .mp-view-btn:active {
+  transform: scale(0.97);
+}
+
+:where(html[data-mp-active="true"]) .mp-view-btn.active {
+  background: var(--mp-accent-fill);
+  color: var(--accent-fg);
+}
+
+:where(html[data-mp-active="true"]) .mp-dash-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+html[data-mp-active="true"] .mp-search-wrapper {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-border);
+  padding: 6px 10px;
+  border-radius: var(--mp-radius);
+  min-height: 32px;
+}
+
+html[data-mp-active="true"] .mp-search-wrapper:focus-within {
+  border-color: var(--mp-accent);
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active input.mp-search-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  color: var(--mp-text) !important;
+  font-size: 13px !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active input.mp-search-input:focus-visible {
+  outline: none !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-search-badge {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 7px;
+  border-radius: var(--mp-radius-inner);
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-border);
+  color: var(--mp-text-muted);
+  white-space: nowrap;
+}
+
+:where(html[data-mp-active="true"]) .mp-cat-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+:where(html[data-mp-active="true"]) .mp-chip {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  color: var(--mp-text-muted);
+  padding: 5px 10px;
+  border-radius: var(--mp-radius-inner);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 120ms ease-out, color 120ms ease-out, background-color 120ms ease-out, transform 60ms ease-out;
+}
+
+:where(html[data-mp-active="true"]) .mp-chip:hover {
+  border-color: var(--mp-border-strong);
+  color: var(--mp-text);
+}
+
+:where(html[data-mp-active="true"]) .mp-chip:active {
+  transform: scale(0.97);
+}
+
+:where(html[data-mp-active="true"]) .mp-chip.active {
+  background: var(--mp-accent-fill);
+  border-color: var(--mp-accent-fill);
+  color: var(--accent-fg);
+}
+
+html[data-mp-active="true"] .mp-dash-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 1180px) {
+  html[data-mp-active="true"] .mp-dash-layout {
+    grid-template-columns: minmax(0, 1fr) 268px;
+  }
+}
+
+@media (max-width: 960px) {
+  html[data-mp-active="true"] .mp-dash-layout {
+    grid-template-columns: 1fr;
+  }
+  html[data-mp-active="true"] #mp-dash-right-top {
+    display: none;
+  }
+}
+
+html[data-mp-active="true"] .mp-dash-main {
+  min-width: 0;
+}
+
+html[data-mp-active="true"] .mp-dash-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+html[data-mp-active="true"] .mp-dash-right-top {
+  min-height: 48px;
+  padding: 8px 9px 8px 12px;
+  gap: 8px;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+html[data-mp-active="true"] .mp-dash-right-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mp-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html[data-mp-active="true"] .mp-calendar-card {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+html[data-mp-active="true"] .mp-cal-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--mp-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+html[data-mp-active="true"] .mp-cal-heading-group {
+  min-width: 0;
+}
+
+html[data-mp-active="true"] .mp-cal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+html[data-mp-active="true"] .mp-cal-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--mp-text);
+}
+
+html[data-mp-active="true"] .mp-cal-period-pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mp-accent);
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-inner);
+  padding: 2px 8px;
+  text-transform: capitalize;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-mp-active="true"] .mp-cal-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--mp-text-muted);
+  flex-wrap: wrap;
+}
+
+html[data-mp-active="true"] .mp-cal-ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--mp-text-muted) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: color 120ms ease-out;
+}
+html[data-mp-active="true"] .mp-cal-ext-link:hover {
+  color: var(--mp-accent) !important;
+}
+
+html[data-mp-active="true"] .mp-cal-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+html[data-mp-active="true"] .mp-cal-nav {
+  display: inline-flex;
+  background: var(--mp-surface-2);
+  padding: 2px;
+  border-radius: var(--mp-radius-inner);
+  border: 1px solid var(--mp-border);
+  gap: 2px;
+}
+
+html[data-mp-active="true"] .mp-cal-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--mp-text-muted);
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 120ms ease-out, color 120ms ease-out, transform 60ms ease-out;
+}
+html[data-mp-active="true"] .mp-cal-nav-btn:hover {
+  background: var(--mp-surface-hover);
+  color: var(--mp-text);
+}
+html[data-mp-active="true"] .mp-cal-nav-btn:active {
+  transform: scale(0.97);
+}
+
+html[data-mp-active="true"] .mp-cal-body {
+  padding: 12px;
+}
+
+html[data-mp-active="true"] .mp-cal-month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-top: 1px solid var(--mp-border);
+  border-left: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-inner);
+  overflow: hidden;
+}
+
+html[data-mp-active="true"] .mp-cal-weekday {
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--mp-text-muted);
+  background: var(--mp-surface-2);
+  border-right: 1px solid var(--mp-border);
+  border-bottom: 1px solid var(--mp-border);
+}
+
+html[data-mp-active="true"] .mp-cal-day-cell {
+  min-height: 92px;
+  padding: 6px;
+  background: var(--mp-surface);
+  border-right: 1px solid var(--mp-border);
+  border-bottom: 1px solid var(--mp-border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+html[data-mp-active="true"] body[data-mp-density="compact"] .mp-cal-day-cell {
+  min-height: 76px;
+  padding: 5px;
+}
+
+html[data-mp-active="true"] .mp-cal-day-cell.is-outside {
+  background: var(--mp-bg);
+  opacity: 0.58;
+}
+
+html[data-mp-active="true"] .mp-cal-day-cell.is-today {
+  background: var(--mp-accent-tint);
+  box-shadow: inset 0 2px 0 var(--mp-accent);
+}
+
+html[data-mp-active="true"] .mp-cal-day-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+html[data-mp-active="true"] .mp-cal-day-num {
+  background: transparent;
+  border: none;
+  color: var(--mp-text);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 6px;
+  border-radius: var(--mp-radius-inner);
+  cursor: pointer;
+  line-height: 1.2;
+  transition: background-color 120ms ease-out, color 120ms ease-out, transform 60ms ease-out;
+}
+html[data-mp-active="true"] .mp-cal-day-num:hover {
+  background: var(--mp-surface-hover);
+  color: var(--mp-accent);
+}
+html[data-mp-active="true"] .mp-cal-day-num:active {
+  transform: scale(0.97);
+}
+html[data-mp-active="true"] .mp-cal-day-cell.is-today .mp-cal-day-num {
+  background: var(--mp-accent-fill);
+  color: var(--accent-fg);
+}
+
+html[data-mp-active="true"] .mp-cal-day-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 99px;
+  background: var(--mp-accent);
+  flex-shrink: 0;
+}
+
+html[data-mp-active="true"] .mp-cal-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+html[data-mp-active="true"] .mp-cal-event-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-border);
+  border-left: 2px solid var(--mp-accent);
+  color: var(--mp-text) !important;
+  font-size: 11px;
+  line-height: 1.25;
+  text-decoration: none !important;
+  min-width: 0;
+  transition: border-color 120ms ease-out, background-color 120ms ease-out;
+}
+html[data-mp-active="true"] .mp-cal-event-pill:hover {
+  background: var(--mp-surface-hover);
+  border-color: var(--mp-accent);
+}
+
+html[data-mp-active="true"] .mp-cal-ev-time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mp-text-muted);
+  flex-shrink: 0;
+}
+
+html[data-mp-active="true"] .mp-cal-ev-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+}
+
+html[data-mp-active="true"] .mp-cal-more-btn {
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  padding: 1px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--mp-accent);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 120ms ease-out, transform 60ms ease-out;
+}
+html[data-mp-active="true"] .mp-cal-more-btn:hover {
+  background: var(--mp-surface-hover);
+}
+html[data-mp-active="true"] .mp-cal-more-btn:active {
+  transform: scale(0.97);
+}
+
+/* Week & Day Views */
+html[data-mp-active="true"] .mp-cal-week-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-inner);
+  overflow: hidden;
+}
+
+html[data-mp-active="true"] .mp-cal-week-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  background: var(--mp-surface);
+}
+html[data-mp-active="true"] .mp-cal-week-row + .mp-cal-week-row {
+  border-top: 1px solid var(--mp-border);
+}
+html[data-mp-active="true"] .mp-cal-week-row.is-today {
+  background: var(--mp-accent-tint);
+  box-shadow: inset 2px 0 0 var(--mp-accent);
+}
+
+@media (max-width: 680px) {
+  html[data-mp-active="true"] .mp-cal-week-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-mp-active="true"] .mp-cal-week-day-col {
+  padding: 8px 10px;
+  border-right: 1px solid var(--mp-border);
+  background: var(--mp-surface-2);
+}
+
+html[data-mp-active="true"] .mp-cal-week-day-btn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 120ms ease-out, transform 60ms ease-out;
+}
+html[data-mp-active="true"] .mp-cal-week-day-btn:hover {
+  background: var(--mp-surface-hover);
+}
+html[data-mp-active="true"] .mp-cal-week-day-btn:active {
+  transform: scale(0.97);
+}
+
+html[data-mp-active="true"] .mp-cal-week-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mp-text);
+}
+html[data-mp-active="true"] .mp-cal-week-row.is-today .mp-cal-week-name {
+  color: var(--mp-accent);
+}
+
+html[data-mp-active="true"] .mp-cal-week-date {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mp-text-muted);
+}
+
+html[data-mp-active="true"] .mp-cal-week-events {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+html[data-mp-active="true"] .mp-cal-no-ev {
+  font-size: 12px;
+  color: var(--mp-text-muted);
+}
+
+html[data-mp-active="true"] .mp-cal-day-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+html[data-mp-active="true"] .mp-cal-day-detail-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--mp-border);
+}
+
+html[data-mp-active="true"] .mp-cal-day-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+html[data-mp-active="true"] .mp-cal-day-detail-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mp-text);
+  text-transform: capitalize;
+}
+
+html[data-mp-active="true"] .mp-cal-today-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--mp-radius-inner);
+  background: var(--mp-accent-fill);
+  color: var(--accent-fg);
+}
+
+html[data-mp-active="true"] .mp-cal-detail-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-inner);
+  overflow: hidden;
+}
+
+html[data-mp-active="true"] .mp-cal-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--mp-surface-2);
+  min-width: 0;
+}
+html[data-mp-active="true"] .mp-cal-detail-item + .mp-cal-detail-item {
+  border-top: 1px solid var(--mp-border);
+}
+
+html[data-mp-active="true"] .mp-cal-detail-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--mp-text-muted);
+  min-width: 42px;
+  flex-shrink: 0;
+}
+
+html[data-mp-active="true"] .mp-cal-detail-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+html[data-mp-active="true"] .mp-cal-detail-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mp-text) !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html[data-mp-active="true"] .mp-cal-detail-link:hover {
+  color: var(--mp-accent) !important;
+}
+
+html[data-mp-active="true"] .mp-cal-detail-course {
+  font-size: 11px;
+  color: var(--mp-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html[data-mp-active="true"] .mp-deadlines-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+html[data-mp-active="true"] .mp-cal-empty-note {
+  font-size: 12px;
+  color: var(--mp-text-muted);
+  margin: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-section-block {
+  margin-bottom: 16px;
+}
+
+:where(html[data-mp-active="true"]) .mp-section-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mp-text);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+:where(html[data-mp-active="true"]) .mp-grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+}
+
+:where(html[data-mp-active="true"]) body[data-mp-density="compact"] .mp-grid-view {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+:where(html[data-mp-active="true"]) .mp-course-card {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 140ms ease-out;
+}
+
+:where(html[data-mp-active="true"]) .mp-course-card:hover {
+  border-color: var(--mp-border-strong);
+}
+
+:where(html[data-mp-active="true"]) .mp-course-card.is-pinned {
+  border-color: var(--mp-warning);
+}
+
+:where(html[data-mp-active="true"]) .mp-card-cover {
+  height: 54px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+  background-color: var(--mp-surface-2);
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--mp-border);
+}
+
+:where(html[data-mp-active="true"]) .mp-card-cover.has-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--mp-bg) 55%, transparent);
+}
+
+:where(html[data-mp-active="true"]) .mp-card-cover > * {
+  position: relative;
+  z-index: 2;
+}
+
+:where(html[data-mp-active="true"]) body[data-mp-density="compact"] .mp-card-cover {
+  height: 44px;
+}
+
+:where(html[data-mp-active="true"]) .mp-cover-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-course-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mp-text);
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border-strong);
+  padding: 2px 6px;
+  border-radius: var(--mp-radius-inner);
+  flex-shrink: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-pin-btn {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border-strong);
+  color: var(--mp-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--mp-radius-inner);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 120ms ease-out, border-color 120ms ease-out, transform 60ms ease-out;
+}
+
+:where(html[data-mp-active="true"]) .mp-pin-btn:hover,
+:where(html[data-mp-active="true"]) .mp-pin-btn.pinned {
+  color: var(--mp-warning);
+  border-color: var(--mp-warning);
+}
+
+:where(html[data-mp-active="true"]) .mp-pin-btn:active {
+  transform: scale(0.97);
+}
+
+:where(html[data-mp-active="true"]) .mp-card-cat {
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  color: var(--mp-text-muted);
+  padding: 2px 6px;
+  border-radius: var(--mp-radius-inner);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:where(html[data-mp-active="true"]) .mp-card-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+}
+
+:where(html[data-mp-active="true"]) .mp-card-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+:where(html[data-mp-active="true"]) .mp-card-title a {
+  display: block;
+  color: var(--mp-text) !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:where(html[data-mp-active="true"]) .mp-card-title a:hover {
+  color: var(--mp-accent) !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+}
+
+:where(html[data-mp-active="true"]) .mp-progress-track {
+  flex: 1;
+  height: 5px;
+  border-radius: 99px;
+  background: var(--mp-surface-2);
+  overflow: hidden;
+}
+
+:where(html[data-mp-active="true"]) .mp-progress-fill {
+  height: 100%;
+  background: var(--mp-accent);
+  border-radius: 99px;
+}
+
+:where(html[data-mp-active="true"]) .mp-progress-label {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mp-text-muted);
+}
+
+:where(html[data-mp-active="true"]) .mp-card-enter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--mp-surface-2);
+  color: var(--mp-text) !important;
+  border: 1px solid var(--mp-border-strong);
+  border-radius: var(--mp-radius-inner);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: background-color 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out, transform 60ms ease-out;
+}
+
+:where(html[data-mp-active="true"]) .mp-card-enter-btn:hover {
+  background: var(--mp-accent-fill);
+  border-color: var(--mp-accent-fill);
+  color: var(--accent-fg) !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-card-enter-btn:active {
+  transform: scale(0.97);
+}
+
+/* Compact List Mode */
+:where(html[data-mp-active="true"]) .mp-compact-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  overflow: hidden;
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-course-card {
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 10px;
+  border: none;
+  border-radius: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-course-card + .mp-course-card {
+  border-top: 1px solid var(--mp-border);
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-course-card.is-pinned {
+  box-shadow: inset 2px 0 0 var(--mp-warning);
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-card-cover {
+  width: auto;
+  height: auto;
+  padding: 0;
+  border: none;
+  background: transparent !important;
+  flex-shrink: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-card-cover.has-img::after,
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-card-cat {
+  display: none;
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-card-body {
+  padding: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  gap: 10px;
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-card-title {
+  flex: 1;
+  min-width: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-progress-wrap {
+  width: 110px;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-compact-list .mp-card-enter-btn {
+  width: auto;
+  padding: 5px 10px;
+  flex-shrink: 0;
+}
+
+/* Deadlines Panel */
+:where(html[data-mp-active="true"]) #mp-deadlines-panel {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-inner);
+  overflow: hidden;
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-item {
+  background: var(--mp-surface-2);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-item + .mp-deadline-item {
+  border-top: 1px solid var(--mp-border);
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-pill {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 1px 6px;
+  border-radius: var(--mp-radius-inner);
+  border: 1px solid var(--mp-border-strong);
+  background: var(--mp-surface);
+  color: var(--mp-accent);
+}
+:where(html[data-mp-active="true"]) .mp-deadline-pill.urgent {
+  border-color: color-mix(in srgb, var(--mp-danger) 40%, transparent);
+  background: var(--mp-danger-tint);
+  color: var(--mp-danger);
+}
+:where(html[data-mp-active="true"]) .mp-deadline-pill.soon {
+  border-color: color-mix(in srgb, var(--mp-warning) 40%, transparent);
+  background: var(--mp-warning-tint);
+  color: var(--mp-warning);
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-date {
+  font-size: 11px;
+  color: var(--mp-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-title {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--mp-text) !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:where(html[data-mp-active="true"]) .mp-deadline-title:hover {
+  color: var(--mp-accent) !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-deadline-course {
+  font-size: 11px;
+  color: var(--mp-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   5. Course Page Workspace, Module Pages (/mod/*) & Deep Activity Unwrapper
+   -------------------------------------------------------------------------- */
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] #page-header,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] #collapsesections,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .collapseall,
+html[data-mp-active="true"] body.mp-overhaul-active.mp-mod-has-header #page-header,
+html[data-mp-active="true"] body.mp-overhaul-active.mp-mod-has-header .activity-header [data-region="activity-dates"] {
+  display: none !important;
+}
+
+html[data-mp-active="true"] #mp-course-hero,
+html[data-mp-active="true"] #mp-module-header {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+html[data-mp-active="true"] .mp-course-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+html[data-mp-active="true"] .mp-mod-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  min-width: 0;
+}
+
+html[data-mp-active="true"] .mp-mod-meta-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+html[data-mp-active="true"] .mp-mod-date-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: var(--mp-radius-inner);
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-border);
+  font-size: 11.5px;
+  color: var(--mp-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-mp-active="true"] .mp-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none !important;
+  color: var(--mp-text-muted) !important;
+  margin-bottom: 2px;
+}
+
+html[data-mp-active="true"] .mp-back-link:hover {
+  color: var(--mp-text) !important;
+}
+
+html[data-mp-active="true"] .mp-course-hero-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--mp-text);
+  min-width: 0;
+}
+
+html[data-mp-active="true"] .mp-course-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Flatten nested section wrappers so each Moodle section renders as a single crisp card */
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-content ul.topics li.section,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-content ul.weeks li.section,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section.main {
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 12px 14px !important;
+  margin-bottom: 12px !important;
+  box-shadow: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .section-item,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .content,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .course-content-item-content {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .course-section-header {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--mp-border) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 0 8px 0 !important;
+  margin: 0 0 10px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section.collapsed .course-section-header,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .section-item:has(.collapse:not(.show)) .course-section-header {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section h3.sectionname,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .sectionname,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .sectionname a {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: var(--mp-text) !important;
+  text-decoration: none !important;
+  margin: 0 !important;
+}
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.section .sectionname a:hover {
+  color: var(--mp-accent) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-section-header .btn.btn-icon,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-section-header .icons-collapse-expand {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  padding: 0 !important;
+  border-radius: var(--mp-radius-inner) !important;
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text-muted) !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: border-color 120ms ease-out, color 120ms ease-out, background-color 120ms ease-out, transform 60ms ease-out !important;
+}
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-section-header .btn.btn-icon:hover,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-section-header .icons-collapse-expand:hover {
+  background: var(--mp-surface-hover) !important;
+  border-color: var(--mp-accent) !important;
+  color: var(--mp-text) !important;
+}
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-section-header .btn.btn-icon:active,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .course-section-header .icons-collapse-expand:active {
+  transform: scale(0.97) !important;
+}
+
+/* Course activity items & replacement SVG icon badges */
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] ul.section {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] li.activity {
+  padding: 0 !important;
+  border: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 10px 12px !important;
+  margin-bottom: 6px !important;
+  position: relative;
+  box-shadow: none !important;
+  transition: border-color 140ms ease-out;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item:hover {
+  border-color: var(--mp-border-strong) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .activityiconcontainer,
+html[data-mp-active="true"] .mp-act-icon-badge {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  padding: 0 !important;
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  color: var(--mp-accent) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .activity-item .activityiconcontainer {
+  margin-right: 10px !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .activityiconcontainer .mp-act-icon-badge {
+  border: none !important;
+  background: transparent !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item [data-region="activity-dates"],
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item .description .course-description-item,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item .activity-altcontent {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 2px 0 0 0 !important;
+  margin: 4px 0 0 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item [data-region="activity-dates"] {
+  font-size: 11.5px !important;
+  color: var(--mp-text-muted) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item a.aal_full,
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item .activityname a {
+  color: var(--mp-text) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+html[data-mp-active="true"] body.mp-overhaul-active[data-mp-page="course"] .activity-item .activityname a:hover {
+  color: var(--mp-accent) !important;
+}
+
+/* Compact completion badges matching BetterMoodle pills */
+html[data-mp-active="true"] body.mp-overhaul-active .completion-info .btn,
+html[data-mp-active="true"] body.mp-overhaul-active .activity-completion .btn,
+html[data-mp-active="true"] body.mp-overhaul-active [data-region="completion-info"] .btn {
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 0 8px !important;
+  border-radius: var(--mp-radius-inner) !important;
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+html[data-mp-active="true"] body.mp-overhaul-active .completion-info .btn:hover,
+html[data-mp-active="true"] body.mp-overhaul-active .activity-completion .btn:hover,
+html[data-mp-active="true"] body.mp-overhaul-active [data-region="completion-info"] .btn:hover {
+  border-color: var(--mp-accent) !important;
+  color: var(--mp-text) !important;
+}
+html[data-mp-active="true"] body.mp-overhaul-active .completion-info .btn-success,
+html[data-mp-active="true"] body.mp-overhaul-active .completion-info .btn-outline-success,
+html[data-mp-active="true"] body.mp-overhaul-active .activity-completion .btn-success,
+html[data-mp-active="true"] body.mp-overhaul-active .activity-completion .btn-outline-success,
+html[data-mp-active="true"] body.mp-overhaul-active [data-region="completion-info"] .btn-success {
+  border-color: color-mix(in srgb, var(--mp-success) 45%, transparent) !important;
+  color: var(--mp-success) !important;
+  background: var(--mp-success-tint) !important;
+}
+
+:where(html[data-mp-active="true"]) body[data-mp-hide-completion="true"] .completion-info,
+:where(html[data-mp-active="true"]) body[data-mp-hide-completion="true"] .activity-completion,
+:where(html[data-mp-active="true"]) body[data-mp-hide-completion="true"] .activity-information,
+:where(html[data-mp-active="true"]) body[data-mp-hide-completion="true"] [data-region="activity-information"] {
+  display: none !important;
+}
+
+/* Module / Assignment page components (/mod/assign/, .submissionstatustable, YUI trees, action buttons) */
+html[data-mp-active="true"] body.mp-overhaul-active[class*="path-mod-"]:not(.path-mod-supervideo) .activity-header {
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[class*="path-mod-"]:not(.path-mod-supervideo) #intro.box.generalbox,
+html[data-mp-active="true"] body.mp-overhaul-active[class*="path-mod-"]:not(.path-mod-supervideo) .activity-description {
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 12px 14px !important;
+  margin-bottom: 12px !important;
+  box-shadow: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active[class*="path-mod-"]:not(.path-mod-supervideo) #intro:empty,
+html[data-mp-active="true"] body.mp-overhaul-active[class*="path-mod-"]:not(.path-mod-supervideo) .activity-description:empty {
+  display: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary {
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 14px !important;
+  margin-top: 12px !important;
+  box-shadow: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable h3,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary h3 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 0 0 10px 0 !important;
+  color: var(--mp-text) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable table.generaltable,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary table.generaltable {
+  width: 100% !important;
+  margin: 0 !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  overflow: hidden !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  font-size: 12.5px !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable th,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable td,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary th,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary td {
+  padding: 9px 12px !important;
+  border: none !important;
+  border-bottom: 1px solid var(--mp-border) !important;
+  vertical-align: middle !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable tr:last-child th,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable tr:last-child td,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary tr:last-child th,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary tr:last-child td {
+  border-bottom: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable tbody tr th,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable tbody tr td.c0,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary tbody tr th,
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary tbody tr td.c0 {
+  width: 220px !important;
+  color: var(--mp-text-muted) !important;
+  font-weight: 500 !important;
+  background-color: var(--mp-surface-2) !important;
+  border-right: 1px solid var(--mp-border) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable tbody tr td:not(.c0),
+html[data-mp-active="true"] body.mp-overhaul-active .gradingsummary tbody tr td:not(.c0) {
+  background-color: transparent !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatussubmitted,
+html[data-mp-active="true"] body.mp-overhaul-active .earlysubmission {
+  color: var(--mp-success) !important;
+  font-weight: 600 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .latesubmission,
+html[data-mp-active="true"] body.mp-overhaul-active .overdue {
+  color: var(--mp-danger) !important;
+  font-weight: 600 !important;
+}
+
+/* Strip legacy YUI file tree graphics & render attachments as crisp pills */
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission .ygtvspacer,
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission .ygtvln,
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission .ygtvtn,
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission .ygtvtm,
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission .ygtvtp,
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission .ygtvblankdepthcell,
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission .fp-icon,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable .ygtvspacer,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable .ygtvln,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable .ygtvtn,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable .ygtvtm,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable .ygtvtp,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable .ygtvblankdepthcell,
+html[data-mp-active="true"] body.mp-overhaul-active .submissionstatustable .fp-icon {
+  display: none !important;
+  background: none !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .ygtvtable,
+html[data-mp-active="true"] body.mp-overhaul-active .ygtvtable td {
+  width: auto !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission {
+  display: inline-flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  color: var(--mp-text-muted) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission a[href*="pluginfile.php"],
+html[data-mp-active="true"] body.mp-overhaul-active .mp-file-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 10px !important;
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  color: var(--mp-text) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: border-color 120ms ease-out, background-color 120ms ease-out !important;
+}
+html[data-mp-active="true"] body.mp-overhaul-active .fileuploadsubmission a[href*="pluginfile.php"]:hover,
+html[data-mp-active="true"] body.mp-overhaul-active .mp-file-pill:hover {
+  background: var(--mp-surface-hover) !important;
+  border-color: var(--mp-accent) !important;
+  color: var(--mp-accent) !important;
+}
+
+html[data-mp-active="true"] .mp-file-pill-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--mp-accent);
+  flex-shrink: 0;
+}
+
+/* Normalize native Moodle submission & module action buttons */
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .submissionaction,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .singlebutton {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .singlebutton .btn,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .submissionaction .btn,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-secondary,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-primary:not(.mp-btn) {
+  height: 30px !important;
+  padding: 0 12px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: var(--mp-radius-inner) !important;
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: background-color 120ms ease-out, border-color 120ms ease-out, transform 60ms ease-out !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .singlebutton .btn:hover,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .submissionaction .btn:hover,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-secondary:hover {
+  background: var(--mp-surface-hover) !important;
+  border-color: var(--mp-accent) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-primary:not(.mp-btn),
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .singlebutton .btn-primary {
+  background: var(--mp-accent-fill) !important;
+  border-color: var(--mp-accent-fill) !important;
+  color: var(--accent-fg) !important;
+}
+
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .singlebutton .btn:active,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .submissionaction .btn:active,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-secondary:active,
+html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) #region-main .btn-primary:not(.mp-btn):active {
+  transform: scale(0.97) !important;
+}
+
+/* z-index > 1 beats Bootstrap .stretched-link::after */
+:where(html[data-mp-active="true"]) .mp-activity-actions {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+:where(html[data-mp-active="true"]) .mp-inline-drawer {
+  position: relative;
+  z-index: 10;
+  margin-top: 8px;
+  padding: 10px;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+}
+
+:where(html[data-mp-active="true"]) .mp-inline-player-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--mp-radius-inner);
+  overflow: hidden;
+  background: #000;
+}
+
+:where(html[data-mp-active="true"]) .mp-inline-player-wrap iframe,
+:where(html[data-mp-active="true"]) .mp-inline-player-wrap video {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+:where(html[data-mp-active="true"]) .mp-inline-file-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-inner);
+  overflow: hidden;
+}
+
+:where(html[data-mp-active="true"]) .mp-inline-file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--mp-surface-2);
+  font-size: 12px;
+}
+
+:where(html[data-mp-active="true"]) .mp-inline-file-row + .mp-inline-file-row {
+  border-top: 1px solid var(--mp-border);
+}
+
+:where(html[data-mp-active="true"]) .mp-inline-file-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   6. SuperVideo Cinema Shell (mod_supervideo)
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #header,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #map-visualization:not(.mp-show-map) {
+  display: none !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #app {
+  background: var(--mp-bg) !important;
+  min-height: 100vh !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding-bottom: 36px !important;
+}
+
+:where(html[data-mp-active="true"]) #mp-cinema-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--mp-surface);
+  border-bottom: 1px solid var(--mp-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  zoom: var(--mp-ui-scale, 1);
+}
+
+
+:where(html[data-mp-active="true"]) .mp-cinema-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+:where(html[data-mp-active="true"]) #mp-cinema-header .mp-cinema-title {
+  margin: 0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: normal !important;
+  color: var(--mp-text);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:where(html[data-mp-active="true"]) .mp-cinema-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo main.stage {
+  flex: 1 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background: transparent !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #videoWrap,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #supervideo_area_embed {
+  width: 100% !important;
+  max-width: 1160px !important;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: 16 / 9 !important;
+  margin: 0 auto !important;
+  border-radius: var(--mp-radius) !important;
+  border: 1px solid var(--mp-border) !important;
+  overflow: hidden !important;
+  background: #000 !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #videoWrap iframe,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #videoWrap video {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  border: none !important;
+}
+
+:where(html[data-mp-active="true"]) #mp-cinema-mobile-bar {
+  width: 100%;
+  max-width: 1160px;
+  margin: 12px auto 0;
+  padding: 10px 12px;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   7. Buttons, Badges & Lightbox Cursor
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) .mp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--mp-radius-inner);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--mp-border-strong);
+  background: var(--mp-surface-2);
+  color: var(--mp-text) !important;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: background-color 120ms ease-out, border-color 120ms ease-out, transform 60ms ease-out;
+  white-space: nowrap;
+}
+
+:where(html[data-mp-active="true"]) .mp-btn:hover {
+  background: var(--mp-surface-hover);
+  border-color: var(--mp-accent);
+}
+
+:where(html[data-mp-active="true"]) .mp-btn:active {
+  transform: scale(0.97);
+}
+
+:where(html[data-mp-active="true"]) .mp-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:where(html[data-mp-active="true"]) .mp-btn-primary {
+  background: var(--mp-accent-fill);
+  border-color: var(--mp-accent-fill);
+  color: var(--accent-fg) !important;
+}
+:where(html[data-mp-active="true"]) .mp-btn-primary:hover {
+  filter: brightness(1.08);
+  color: var(--accent-fg) !important;
+}
+
+html[data-mp-active="true"] .mp-btn-attachment {
+  background: var(--mp-surface);
+  border-color: var(--mp-border-strong);
+  color: var(--mp-text) !important;
+}
+html[data-mp-active="true"] .mp-btn-attachment:hover {
+  background: var(--mp-surface-hover);
+  border-color: var(--mp-accent);
+}
+
+:where(html[data-mp-active="true"]) .mp-btn-success {
+  background: var(--mp-success-solid);
+  border-color: var(--mp-success-solid);
+  color: var(--mp-success-solid-fg) !important;
+}
+:where(html[data-mp-active="true"]) .mp-btn-success:hover {
+  filter: brightness(1.12);
+  color: var(--mp-success-solid-fg) !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-btn-danger {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--mp-danger) 40%, transparent);
+  color: var(--mp-danger) !important;
+}
+:where(html[data-mp-active="true"]) .mp-btn-danger:hover {
+  background: var(--mp-danger-tint);
+  border-color: var(--mp-danger);
+}
+
+:where(html[data-mp-active="true"]) .mp-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: var(--mp-radius-inner);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-border-strong);
+  color: var(--mp-text);
+  flex-shrink: 0;
+}
+:where(html[data-mp-active="true"]) .mp-badge-drive {
+  border-color: color-mix(in srgb, var(--mp-success) 45%, transparent);
+  color: var(--mp-success);
+}
+:where(html[data-mp-active="true"]) .mp-badge-yt {
+  border-color: color-mix(in srgb, var(--mp-danger) 45%, transparent);
+  color: var(--mp-danger);
+}
+
+:where(html[data-mp-active="true"]) .moodle-plus-zoomable {
+  cursor: zoom-in !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Login Page, Timed-Out Relogin & Logout Confirm Overhaul
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-login #page-wrapper,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.pagelayout-login #page-wrapper,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #page-wrapper,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-login #page,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.pagelayout-login #page,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #page,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-login #topofscroll,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.pagelayout-login #topofscroll,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #topofscroll,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-login .main-inner,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.pagelayout-login .main-inner,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .main-inner,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-login #page-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.pagelayout-login #page-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #page-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-login #region-main-box,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.pagelayout-login #region-main-box,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #region-main-box {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.path-login #page-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active.pagelayout-login #page-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #page-content {
+  min-height: 100vh !important;
+  padding: 56px 16px 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #region-main {
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  zoom: var(--mp-ui-scale, 1);
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-wrapper {
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Single card: the container is the card; a wrapper without a container falls back to it */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-container,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-wrapper:not(:has(.login-container)) {
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 20px 22px !important;
+  box-shadow: none !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #region-main > .card,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .box.generalbox,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #notice {
+  background: var(--mp-surface) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-radius: var(--mp-radius) !important;
+  padding: 20px 22px !important;
+  margin: 0 auto !important;
+  max-width: 420px !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-heading,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-logo,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-divider {
+  border-color: var(--mp-border) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-logo img,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #loginlogo img {
+  max-height: 72px !important;
+  width: auto !important;
+  border-radius: var(--mp-radius-inner) !important;
+}
+
+:where(html[data-mp-active="true"]) #mp-login-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--mp-border);
+}
+
+:where(html[data-mp-active="true"]) .mp-login-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+:where(html[data-mp-active="true"]) .mp-login-site {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mp-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:where(html[data-mp-active="true"]) .mp-login-domain {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mp-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:where(html[data-mp-active="true"]) #mp-relogin-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--mp-radius-inner);
+  background: var(--mp-surface-2);
+  border: 1px solid var(--mp-warning);
+  color: var(--mp-text);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ---- Moodle 5+ split login: hero image panel + form column ---- */
+:where(html[data-mp-active="true"]):has(> body.mp-overhaul-active) {
+  background-color: var(--mp-bg);
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] #page-wrapper,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] #page {
+  min-height: 100vh !important;
+  padding: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] #page-content {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] .login-layout-left {
+  flex: 0 0 auto !important;
+  width: calc(50% - 32px) !important;
+  height: calc(100vh - 32px) !important;
+  margin: 16px !important;
+  top: 16px !important;
+  border-radius: var(--mp-radius) !important;
+  border: 1px solid var(--mp-border) !important;
+  overflow: hidden !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] #region-main.login-layout-right,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] .login-layout-right {
+  flex: 1 1 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 72px 24px 32px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] .login-layout-right-content,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] #region-main-box {
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"][data-mp-login-layout="split"] .login-container {
+  max-width: 400px !important;
+  padding: 28px 28px 18px !important;
+}
+
+/* ---- Form card internals (all Moodle 4.x/5.x layouts) ---- */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #loginlogo,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-logo {
+  margin: 0 0 18px 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .loginform > h1,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-container h1,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-heading {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  margin: 0 0 4px 0 !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .loginform > p.text-muted,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-container > p {
+  font-size: 12.5px !important;
+  line-height: 1.45 !important;
+  margin: 0 0 20px 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login .form-label,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--mp-text-muted) !important;
+  margin-bottom: 6px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login .input-group > .form-control {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login .toggle-sensitive-btn,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login .input-group > .btn {
+  height: 36px !important;
+  min-width: 40px !important;
+  padding: 0 10px !important;
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-left: none !important;
+  color: var(--mp-text-muted) !important;
+  border-radius: 0 var(--mp-radius-inner) var(--mp-radius-inner) 0 !important;
+  box-shadow: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login .toggle-sensitive-btn:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login .input-group > .btn:hover {
+  color: var(--mp-text) !important;
+  background: var(--mp-surface-hover) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-languagemenu {
+  margin: 18px 0 6px 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-languagemenu a,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-cookiesnotice .btn-link {
+  font-size: 12px !important;
+  color: var(--mp-text-muted) !important;
+  text-decoration: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-languagemenu a:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-cookiesnotice .btn-link:hover {
+  color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-cookiesnotice {
+  padding-top: 12px !important;
+  border-top: 1px solid var(--mp-border) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #mp-login-header.is-banner-only {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 16px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #mp-relogin-banner.is-neutral {
+  border-color: var(--mp-border-strong) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #mp-relogin-banner.is-neutral svg {
+  color: var(--mp-text-muted) !important;
+}
+
+:where(html[data-mp-active="true"]) #mp-relogin-banner svg {
+  color: var(--mp-warning);
+  flex-shrink: 0;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .alert-danger,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .loginerrors .alert {
+  background: var(--mp-danger-tint) !important;
+  border: 1px solid color-mix(in srgb, var(--mp-danger) 40%, transparent) !important;
+  color: var(--mp-text) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  font-size: 12px !important;
+  padding: 8px 10px !important;
+  margin-bottom: 12px !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] form#login .form-control {
+  height: 36px !important;
+  padding: 6px 10px !important;
+  font-size: 13px !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #loginbtn,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-form-submit button[type="submit"],
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #notice .btn-primary,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] button.btn-primary {
+  width: 100% !important;
+  height: 36px !important;
+  background: var(--mp-accent-fill) !important;
+  border: 1px solid var(--mp-accent-fill) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  color: var(--accent-fg) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  transition: filter 120ms ease-out, transform 60ms ease-out !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #loginbtn:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #notice .btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #loginbtn:active,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #notice .btn-primary:active {
+  transform: scale(0.97) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .btn-secondary,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-identityproviders .potentialidp a,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] #guestlogin button {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  color: var(--mp-text) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .btn-secondary:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-identityproviders .potentialidp a:hover {
+  background: var(--mp-surface-hover) !important;
+  border-color: var(--mp-accent) !important;
+}
+
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-form-forgotpassword a,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-signup a {
+  font-size: 12px !important;
+  color: var(--mp-text-muted) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-form-forgotpassword a:hover,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active[data-mp-page="login"] .login-signup a:hover {
+  color: var(--mp-accent) !important;
+}
+
+:where(html[data-mp-active="true"]) .mp-hidden,
+html[data-mp-active="true"] body.mp-overhaul-active li.mp-filtered-out {
+  display: none !important;
+}

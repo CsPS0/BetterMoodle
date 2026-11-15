@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BetterMoodle - Beállítások</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="options-shell">
+    <header class="options-header">
+      <div class="hdr-left">
+        <span class="monogram" aria-hidden="true">
+          <svg width="18" height="18" viewBox="16 24 100 82" fill="none" aria-hidden="true">
+            <path d="M 26 80 V 38 L 50 62 L 74 38 V 80" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M 97 34 V 56 M 86 45 H 108" stroke="var(--accent, #3b82f6)" stroke-width="10" stroke-linecap="round" />
+            <path d="M 26 97 H 102" stroke="var(--accent, #3b82f6)" stroke-width="6" stroke-linecap="round" />
+          </svg>
+        </span>
+        <h1 class="page-title" title="BetterMoodle Beállítások">BetterMoodle Beállítások</h1>
+      </div>
+      <div class="hdr-right">
+        <a
+          href="https://github.com/CsPS0/BetterMoodle"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="gh-header-link"
+          title="BetterMoodle a GitHubon"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3.1-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z" />
+            <path d="M8 14v.5" />
+            <path d="M16 14v.5" />
+            <path d="M11.25 16.25h1.5L12 17l-.75-.75Z" />
+          </svg>
+          <span>GitHub</span>
+        </a>
+        <span class="save-status" id="saveStatus" role="status" aria-live="polite">Mentve</span>
+        <span class="version-pill tabular" id="optVersion" hidden></span>
+      </div>
+    </header>
+
+    <!-- Group 1: Interface & Theme Parity -->
+    <section class="options-section" aria-labelledby="sec-appearance">
+      <h2 class="section-heading" id="sec-appearance">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
+        </svg>
+        <span>Megjelenés és Téma</span>
+      </h2>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optUiScheme" class="row-label">Bővítmény kezelőfelület módja</label>
+            <span class="row-desc">A felugró ablak, oldalsáv és beállítások színvilága (rendszer vagy kézi).</span>
+          </div>
+          <div class="row-control">
+            <select id="optUiScheme" class="select-control">
+              <option value="auto">Rendszer követése</option>
+              <option value="dark">Sötét</option>
+              <option value="light">Világos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optTheme" class="row-label">Moodle oldal téma</label>
+            <span class="row-desc">Alap paletta az aktív Moodle oldalon.</span>
+          </div>
+          <div class="row-control">
+            <select id="optTheme" class="select-control">
+              <option value="midnight">Midnight Pro (Cobalt)</option>
+              <option value="oled">OLED Black (Emerald)</option>
+              <option value="catppuccin">Catppuccin (Mocha)</option>
+              <option value="light">Clean Light</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optAccentHex" class="row-label">Egyéni kiemelő szín</label>
+            <span class="row-desc">Gombok, aktív jelölők és fókuszgyűrű színe.</span>
+          </div>
+          <div class="row-control">
+            <input type="color" id="optAccentPicker" class="color-picker" aria-label="Kiemelő szín kiválasztó" />
+            <input type="text" id="optAccentHex" class="input-control hex-input" placeholder="#3b82f6" maxlength="7" aria-label="Kiemelő szín hex kód" />
+            <button type="button" id="optAccentReset" class="btn-secondary">Alap</button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optBgHex" class="row-label">Egyéni háttérszín</label>
+            <span class="row-desc">Felülbírálja a téma alap vászonszínét.</span>
+          </div>
+          <div class="row-control">
+            <input type="color" id="optBgPicker" class="color-picker" aria-label="Háttérszín kiválasztó" />
+            <input type="text" id="optBgHex" class="input-control hex-input" placeholder="#09090b" maxlength="7" aria-label="Háttérszín hex kód" />
+            <button type="button" id="optBgReset" class="btn-secondary">Alap</button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optCardRadius" class="row-label">Kártya sarokkerekítés</label>
+            <span class="row-desc">Kurzus kártyák és panelek külső kerekítése (0–16 px).</span>
+          </div>
+          <div class="row-control">
+            <input type="range" id="optCardRadius" class="range-control" min="0" max="16" step="2" />
+            <span class="range-value tabular" id="optRadiusVal">8px</span>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optUiScale" class="row-label">Felület mérete</label>
+            <span class="row-desc">Nagyítja vagy kicsinyíti az átalakított Moodle felület elemeit (85–125%).</span>
+          </div>
+          <div class="row-control">
+            <input type="range" id="optUiScale" class="range-control" min="85" max="125" step="5" />
+            <span class="range-value tabular" id="optScaleVal">100%</span>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optNavStyle" class="row-label">Navigáció elhelyezése</label>
+            <span class="row-desc">Rögzített bal oldalsáv vagy kompakt felső sáv.</span>
+          </div>
+          <div class="row-control">
+            <select id="optNavStyle" class="select-control">
+              <option value="sidebar">Bal oldalsáv</option>
+              <option value="topbar">Felső sáv</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optCourseNavStyle" class="row-label">Kurzus navigációs sáv elemei</label>
+            <span class="row-desc">A kurzuson belüli fülek (Kurzus, Résztvevők, Értékelések, Tevékenységek, Készségek) megjelenítése.</span>
+          </div>
+          <div class="row-control">
+            <select id="optCourseNavStyle" class="select-control">
+              <option value="icons">Csak ikonok (Alap)</option>
+              <option value="both">Ikonok és szöveg</option>
+              <option value="text">Csak szöveg</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optCourseNavBgHex" class="row-label">Kurzus navigációs sáv háttere</label>
+            <span class="row-desc">Átszínezi a kurzuson belüli navigációs sáv tartódobozát.</span>
+          </div>
+          <div class="row-control">
+            <input type="color" id="optCourseNavBgPicker" class="color-picker" aria-label="Kurzus navigációs sáv háttérszín kiválasztó" />
+            <input type="text" id="optCourseNavBgHex" class="input-control hex-input" placeholder="Alapért." maxlength="7" aria-label="Kurzus navigációs sáv hex kód" />
+            <button type="button" id="optCourseNavBgReset" class="btn-secondary">Alap</button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optDensity" class="row-label">Sűrűség</label>
+            <span class="row-desc">Kártyák közötti térközök.</span>
+          </div>
+          <div class="row-control">
+            <select id="optDensity" class="select-control">
+              <option value="normal">Normál</option>
+              <option value="compact">Kompakt</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optWallpaperUrl" class="row-label">Egyéni háttérkép URL</label>
+            <span class="row-desc">Kép közvetlen webcíme a Moodle oldal mögé.</span>
+          </div>
+          <div class="row-control">
+            <input type="url" id="optWallpaperUrl" class="input-control url-input" placeholder="https://.../hatter.jpg" aria-label="Háttérkép URL" />
+            <button type="button" id="optWallpaperSave" class="btn-secondary">Mentés</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Group 2: Media & Workflow -->
+    <section class="options-section" aria-labelledby="sec-media">
+      <h2 class="section-heading" id="sec-media">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="23 7 16 12 23 17 23 7" />
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+        </svg>
+        <span>Média Kibontó és Tananyag</span>
+      </h2>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optAutoUnwrap" class="row-label">Automatikus helyben kibontás</label>
+            <span class="row-desc">A kurzusoldalon azonnal feloldja a videók, mappák és külső linkek letöltőgombjait.</span>
+          </div>
+          <div class="row-control">
+            <label class="switch">
+              <input type="checkbox" id="optAutoUnwrap" aria-label="Automatikus helyben kibontás" />
+              <span class="switch-track"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optHideCompletion" class="row-label">Teljesítési feltételek elrejtése</label>
+            <span class="row-desc">Elrejti a hosszú "Megjelölve / Teljesítve" dobozokat a kurzuslistákban.</span>
+          </div>
+          <div class="row-control">
+            <label class="switch">
+              <input type="checkbox" id="optHideCompletion" aria-label="Teljesítési feltételek elrejtése" />
+              <span class="switch-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Group 3: Keyboard Shortcuts -->
+    <section class="options-section" aria-labelledby="sec-shortcuts">
+      <h2 class="section-heading" id="sec-shortcuts">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="4 17 10 11 4 5" />
+          <line x1="12" y1="19" x2="20" y2="19" />
+        </svg>
+        <span>Billentyűparancsok</span>
+      </h2>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="row-info">
+            <span class="row-label">Overhaul mód ki- és bekapcsolása</span>
+          </div>
+          <div class="row-control"><kbd>Alt + Shift + M</kbd></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-info">
+            <span class="row-label">Shadow DOM testreszabó panel megnyitása</span>
+          </div>
+          <div class="row-control"><kbd>Alt + Shift + K</kbd></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-info">
+            <span class="row-label">Aktuális videó / elsődleges média letöltése</span>
+          </div>
+          <div class="row-control"><kbd>Alt + Shift + D</kbd></div>
+        </div>
+        <div class="settings-row">
+          <div class="row-info">
+            <span class="row-label">Aktív panel vagy nagyított kép bezárása</span>
+          </div>
+          <div class="row-control"><kbd>Esc</kbd></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Group 4: Storage Management -->
+    <section class="options-section" aria-labelledby="sec-storage">
+      <h2 class="section-heading" id="sec-storage">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="21 8 21 21 3 21 3 8" />
+          <rect x="1" y="3" width="22" height="5" />
+          <line x1="10" y1="12" x2="14" y2="12" />
+        </svg>
+        <span>Adatok és Gyorsítótár</span>
+      </h2>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="row-info">
+            <span class="row-label">Gyorsítótárazott kurzusok és határidők</span>
+            <span class="row-desc tabular" id="optCacheStats">0 kurzus, 0 határidő tárolva</span>
+          </div>
+          <div class="row-control">
+            <button type="button" id="optClearCache" class="btn-secondary">Gyorsítótár törlése</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="row-info">
+            <span class="row-label">Alapértelmezett beállítások visszaállítása</span>
+            <span class="row-desc">Minden vizuális beállítást visszaállít az eredetire.</span>
+          </div>
+          <div class="row-control">
+            <button type="button" id="optResetAll" class="btn-danger">Alaphelyzet</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Group 5: Advanced Settings & Project Info -->
+    <section class="options-section" aria-labelledby="sec-advanced">
+      <h2 class="section-heading" id="sec-advanced">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="21" x2="4" y2="14" />
+          <line x1="4" y1="10" x2="4" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12" y2="3" />
+          <line x1="20" y1="21" x2="20" y2="16" />
+          <line x1="20" y1="12" x2="20" y2="3" />
+          <line x1="1" y1="14" x2="7" y2="14" />
+          <line x1="9" y1="8" x2="15" y2="8" />
+          <line x1="17" y1="16" x2="23" y2="16" />
+        </svg>
+        <span>Speciális beállítások</span>
+      </h2>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="row-info">
+            <label for="optOverhaulMode" class="row-label">Teljes Overhaul mód (Eredeti Moodle kikapcsolása)</label>
+            <span class="row-desc">Kikapcsolva a gyári Moodle megjelenés látható a beépített elrendezés és mozi-nézet helyett.</span>
+          </div>
+          <div class="row-control">
+            <label class="switch">
+              <input type="checkbox" id="optOverhaulMode" aria-label="Teljes Overhaul mód" />
+              <span class="switch-track"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="row-info">
+            <span class="row-label">GitHub</span>
+            <span class="row-desc">Nyílt forráskód, hibajelentések és legújabb kiadások megtekintése a GitHubon.</span>
+          </div>
+          <div class="row-control">
+            <a
+              href="https://github.com/CsPS0/BetterMoodle"
+              target="_blank"
+              rel="noopener noreferrer"
+              id="optGithubRepoLink"
+              class="btn-secondary btn-github-cat"
+              title="BetterMoodle a GitHubon"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3.1-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z" />
+                <path d="M8 14v.5" />
+                <path d="M16 14v.5" />
+                <path d="M11.25 16.25h1.5L12 17l-.75-.75Z" />
+              </svg>
+              <span>GitHub megnyitása</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>

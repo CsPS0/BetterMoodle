@@ -1,0 +1,50 @@
+name: Build and Release BetterMoodle
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify syntax, manifest, integrity and CSS scoping
+        run: node scripts/verify.mjs
+
+      - name: Package extension (version from the tag)
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$(node -p 'require("./extension/manifest.json").version')"
+          fi
+          node scripts/package.mjs --version "${VERSION}"
+          (cd dist && sha256sum BetterMoodle*.zip > SHA256SUMS.txt)
+          cat dist/SHA256SUMS.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: BetterMoodle-dist
+          path: dist/
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

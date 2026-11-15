@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BetterMoodle</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- Core Control 1: Primary sign-out & active page CTA (strictly inside top 60px) -->
+  <header class="top-control-bar" aria-label="Fő vezérlők">
+    <div class="brand-status">
+      <span class="monogram" aria-hidden="true">
+        <svg width="16" height="16" viewBox="16 24 100 82" fill="none" aria-hidden="true">
+          <path d="M 26 80 V 38 L 50 62 L 74 38 V 80" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M 97 34 V 56 M 86 45 H 108" stroke="var(--accent, #3b82f6)" stroke-width="10" stroke-linecap="round" />
+          <path d="M 26 97 H 102" stroke="var(--accent, #3b82f6)" stroke-width="6" stroke-linecap="round" />
+        </svg>
+      </span>
+      <div class="host-meta">
+        <span class="app-name" title="BetterMoodle">BetterMoodle</span>
+        <span class="host-line">
+          <span class="status-dot" id="moodleStatusDot" aria-hidden="true"></span>
+          <span class="host-text" id="activeHostText" title="Nincs aktív Moodle oldal">Nincs Moodle oldal</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button type="button" class="btn-icon" id="signOutBtn" title="Kijelentkezés a Moodle fiókból" aria-label="Kijelentkezés a Moodle fiókból" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+      </button>
+      <button type="button" class="btn-primary" id="primaryActionBtn" title="Moodle Irányítópult megnyitása">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+          <polyline points="15 3 21 3 21 9" />
+          <line x1="10" y1="14" x2="21" y2="3" />
+        </svg>
+        <span id="primaryActionLabel">Moodle</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Core Control 2: Live media/files + course quick filter & status list -->
+  <section class="quick-explorer" aria-label="Gyors elérés és aktív média">
+    <div class="explorer-toolbar">
+      <div class="search-box">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input
+          type="text"
+          id="quickFilterInput"
+          class="search-input"
+          placeholder="Szűrés (kurzus, videó, fájl)..."
+          aria-label="Szűrés kurzusok és aktív fájlok között"
+        />
+      </div>
+
+      <div class="segment-tabs" role="tablist" aria-label="Lista nézet szűrő">
+        <button type="button" class="segment-btn active" id="tabAll" data-filter="all" role="tab" aria-selected="true">Mind</button>
+        <button type="button" class="segment-btn" id="tabMedia" data-filter="media" role="tab" aria-selected="false">Média</button>
+        <button type="button" class="segment-btn" id="tabCourses" data-filter="courses" role="tab" aria-selected="false">Kurzus</button>
+      </div>
+
+      <span class="count-pill tabular" id="explorerCount" title="Találatok száma">0</span>
+    </div>
+
+    <div class="explorer-list" id="explorerList" role="list" aria-label="Média és kurzus lista"></div>
+  </section>
+
+  <!-- Core Control 3: Compact grouped 1px-bordered settings -->
+  <section aria-label="Gyors beállítások">
+    <div class="settings-group">
+      <div class="settings-row">
+        <div class="row-pair">
+          <div class="field-inline">
+            <label for="uiScheme" class="field-label" title="Kezelőfelület megjelenése">Felület</label>
+            <select id="uiScheme" class="compact-select" aria-label="Kezelőfelület színmód">
+              <option value="auto">Rendszer</option>
+              <option value="dark">Sötét</option>
+              <option value="light">Világos</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <label for="theme" class="field-label" title="Moodle oldal téma">Téma</label>
+            <select id="theme" class="compact-select" aria-label="Moodle téma előbeállítás">
+              <option value="midnight">Midnight</option>
+              <option value="oled">OLED</option>
+              <option value="catppuccin">Catppuccin</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="row-pair">
+          <div class="field-inline">
+            <label for="density" class="field-label" title="Naptár és listák sűrűsége">Sűrűség</label>
+            <select id="density" class="compact-select" aria-label="Felület sűrűsége">
+              <option value="normal">Normál</option>
+              <option value="compact">Kompakt</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <label for="navStyle" class="field-label" title="Moodle navigáció helye">Nav</label>
+            <select id="navStyle" class="compact-select" aria-label="Navigációs sáv típusa">
+              <option value="sidebar">Oldalsáv</option>
+              <option value="topbar">Felső sáv</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="row-pair">
+          <div class="field-inline">
+            <label for="courseNavStyle" class="field-label" title="Kurzus belső navigációs sáv elemei">Fülek</label>
+            <select id="courseNavStyle" class="compact-select" aria-label="Kurzus navigáció stílusa">
+              <option value="icons">Ikonok</option>
+              <option value="both">Ikon+szöveg</option>
+              <option value="text">Szöveg</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <label for="courseNavBgPicker" class="field-label" title="Kurzus sáv háttérszíne">Sáv szín</label>
+            <div class="color-mini-pair">
+              <input type="color" id="courseNavBgPicker" class="compact-color" value="#121215" aria-label="Kurzus navigációs sáv színe" />
+              <button type="button" class="btn-mini-reset" id="courseNavBgReset" title="Sáv szín alaphelyzetbe">Alap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <span class="field-label" title="Oldal nagyítása / kicsinyítése (85% – 125%)">Felület méret</span>
+        <div class="scale-stepper" role="group" aria-label="Felület méret beállítása">
+          <button type="button" class="scale-btn" id="popupScaleDec" aria-label="Felület kicsinyítése" title="Kisebb (-5%)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /></svg></button>
+          <span class="scale-value tabular" id="popupScaleVal" title="Aktuális nagyítás">100%</span>
+          <button type="button" class="scale-btn" id="popupScaleInc" aria-label="Felület nagyítása" title="Nagyobb (+5%)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg></button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="toggle-pair">
+          <div class="toggle-cell">
+            <label for="autoUnwrap" class="field-label" title="Mappák, videók és linkek azonnali kibontása">Helyben kibontás</label>
+            <label class="switch">
+              <input type="checkbox" id="autoUnwrap" aria-label="Automatikus helyben kibontás" />
+              <span class="switch-track"></span>
+            </label>
+          </div>
+          <div class="toggle-cell">
+            <label for="hideCompletion" class="field-label" title="Teljesítési feltételek elrejtése">Feltétel rejtés</label>
+            <label class="switch">
+              <input type="checkbox" id="hideCompletion" aria-label="Teljesítési feltételek elrejtése" />
+              <span class="switch-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Keyboard Shortcuts & Surface Navigation -->
+  <footer class="shortcut-bar" aria-label="Gyorsbillentyűk és panelek">
+    <div class="kbd-list">
+      <span class="kbd-hint" title="Aktív videó vagy fájl letöltése"><kbd>Alt+Shift+D</kbd> Letöltés</span>
+    </div>
+
+    <div class="footer-actions">
+      <a
+        href="https://github.com/CsPS0/BetterMoodle"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-link-compact"
+        title="BetterMoodle a GitHubon"
+        aria-label="BetterMoodle a GitHubon"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3.1-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z" />
+          <path d="M8 14v.5" />
+          <path d="M16 14v.5" />
+          <path d="M11.25 16.25h1.5L12 17l-.75-.75Z" />
+        </svg>
+        <span>GitHub</span>
+      </a>
+      <button type="button" class="btn-link-compact" id="openSidePanelBtn" title="Oldalsó panel megnyitása">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <line x1="15" y1="3" x2="15" y2="21" />
+        </svg>
+        <span>Panel</span>
+      </button>
+      <button type="button" class="btn-link-compact" id="openOptionsBtn" title="Részletes beállítások">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+        <span>Beállítás</span>
+      </button>
+    </div>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
