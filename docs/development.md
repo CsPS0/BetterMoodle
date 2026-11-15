@@ -1,6 +1,6 @@
 # Development
 
-Requirements: a Chromium browser and Node.js 20+ (only for the scripts; the extension itself has no build step).
+Requirements: a Chromium browser and Node.js 24+ (only for the scripts; the extension itself has no build step).
 
 ## Load the extension
 
