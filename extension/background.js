@@ -20,6 +20,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message?.type === 'OPEN_SIDE_PANEL') {
+    // Firefox: sidebar instead of side panel. It only opens from a user action, so this may be refused.
+    const sidebar = (globalThis.browser || chrome).sidebarAction;
+    if (!chrome.sidePanel && sidebar && typeof sidebar.open === 'function') {
+      sidebar.open()
+        .then(() => sendResponse({ ok: true }))
+        .catch((err) => sendResponse({ ok: false, error: err?.message || 'Unable to open sidebar' }));
+      return true;
+    }
     (async () => {
       try {
         let windowId = sender?.tab?.windowId || message.windowId;

@@ -10,7 +10,7 @@
     } catch (_) {}
   </script>
   <title>BetterMoodle</title>
-  <meta name="description" content="Moodle felület-átalakító és fájlletöltő bővítmény." />
+  <meta name="description" content="Moodle felület-átalakító bővítmény Chrome-hoz és Firefoxhoz, telepíthető webes alkalmazással." />
   <link rel="canonical" href="https://csps0.github.io/BetterMoodle/" />
 
   <!-- Open Graph (Discord, Facebook, Instagram, Messenger, WhatsApp, LinkedIn) -->
@@ -19,7 +19,7 @@
   <meta property="og:locale" content="hu_HU" />
   <meta property="og:url" content="https://csps0.github.io/BetterMoodle/" />
   <meta property="og:title" content="BetterMoodle" />
-  <meta property="og:description" content="Moodle felület-átalakító és fájlletöltő bővítmény." />
+  <meta property="og:description" content="Moodle felület-átalakító bővítmény Chrome-hoz és Firefoxhoz, telepíthető webes alkalmazással." />
   <meta property="og:image" content="https://csps0.github.io/BetterMoodle/assets/og-image.png?v=2" />
   <meta property="og:image:secure_url" content="https://csps0.github.io/BetterMoodle/assets/og-image.png?v=2" />
   <meta property="og:image:type" content="image/png" />
@@ -30,7 +30,7 @@
   <!-- Large preview card (X/Twitter; Discord also uses it to show the big image) -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="BetterMoodle" />
-  <meta name="twitter:description" content="Moodle felület-átalakító és fájlletöltő bővítmény." />
+  <meta name="twitter:description" content="Moodle felület-átalakító bővítmény Chrome-hoz és Firefoxhoz, telepíthető webes alkalmazással." />
   <meta name="twitter:image" content="https://csps0.github.io/BetterMoodle/assets/og-image.png?v=2" />
   <meta name="twitter:image:alt" content="BetterMoodle felület előnézet" />
 
@@ -101,24 +101,75 @@
         </div>
 
         <div class="settings-row">
-          <div class="availability-note" role="note">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-            <div class="availability-text">
-              <span class="row-label">Jelenleg csak számítógépen, Google Chrome-ban</span>
-              <span class="row-desc">Asztali gépen és laptopon használható. Hamarosan: saját telefonos alkalmazás és Firefox támogatás.</span>
-            </div>
+          <div class="step-strip" aria-label="Telepítési lépések Chrome-ban">
+            <span class="step-item"><span class="step-num">1</span> ZIP kicsomagolása</span>
+            <span class="step-item"><span class="step-num">2</span> <code>chrome://extensions</code> · Fejlesztői mód</span>
+            <span class="step-item"><span class="step-num">3</span> Kicsomagolt betöltése</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platforms -->
+    <section class="section-block" aria-labelledby="platforms-heading">
+      <div class="section-bar">
+        <h2 class="section-heading" id="platforms-heading">Elérhető változatok</h2>
+      </div>
+      <div class="settings-group">
+        <div class="settings-row">
+          <svg class="platform-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <line x1="8" y1="21" x2="16" y2="21" />
+            <line x1="12" y1="17" x2="12" y2="21" />
+          </svg>
+          <div class="row-info">
+            <span class="row-label">Chrome és Edge</span>
+            <span class="row-desc">Asztali bővítmény a teljes Moodle-felülethez. Letöltés fent, telepítés a fenti három lépéssel.</span>
           </div>
         </div>
 
         <div class="settings-row">
-          <div class="step-strip" aria-label="Telepítési lépések">
-            <span class="step-item"><span class="step-num">1</span> ZIP kicsomagolása</span>
-            <span class="step-item"><span class="step-num">2</span> <code>chrome://extensions</code> · Fejlesztői mód</span>
-            <span class="step-item"><span class="step-num">3</span> Kicsomagolt betöltése</span>
+          <svg class="platform-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 3a9 9 0 0 0 0 18" />
+            <path d="M3.6 9h16.8" />
+            <path d="M3.6 15h16.8" />
+          </svg>
+          <div class="row-info">
+            <span class="row-label">Firefox <span class="version-pill">kísérleti</span></span>
+            <span class="row-desc"><code>about:debugging</code> · Ez a Firefox · Ideiglenes kiegészítő betöltése, majd a letöltött ZIP. A Firefox újraindításáig marad betöltve.</span>
+          </div>
+          <div class="row-control">
+            <a href="https://github.com/CsPS0/BetterMoodle/releases/latest/download/BetterMoodle-firefox.zip" class="btn-secondary" title="Firefox-változat letöltése a GitHubról">Letöltés (.zip)</a>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <svg class="platform-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="6" y="2" width="12" height="20" rx="2" />
+            <line x1="11" y1="18" x2="13" y2="18" />
+          </svg>
+          <div class="row-info">
+            <span class="row-label">Webes alkalmazás</span>
+            <span class="row-desc">Telefonra telepíthető alkalmazás: határidők, kurzusok, fájlok és feladatbeadás a Moodle mobilos felületén keresztül. Az iskolai Moodle-nek engedélyeznie kell a mobilalkalmazást.</span>
+          </div>
+          <div class="row-control">
+            <a href="app/" class="btn-secondary" title="A webes alkalmazás megnyitása">Megnyitás</a>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <svg class="platform-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="6" y="2" width="12" height="20" rx="2" />
+            <path d="M9 7h6" />
+            <path d="M9 11h6" />
+          </svg>
+          <div class="row-info">
+            <span class="row-label">Android alkalmazás</span>
+            <span class="row-desc">A bővítmény teljes felülete telefonon, a saját Moodle-oldaladon.</span>
+          </div>
+          <div class="row-control">
+            <span class="version-pill">Hamarosan</span>
           </div>
         </div>
       </div>

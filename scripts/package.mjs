@@ -3,11 +3,17 @@
 //
 //   node scripts/package.mjs                    -> dist/BetterMoodle.zip (+ versioned copy)
 //   node scripts/package.mjs --version 1.2.3    -> stamps 1.2.3 into the packaged manifest.json
+//   node scripts/package.mjs --target firefox   -> dist/BetterMoodle-firefox.zip (+ versioned copy)
 //
 // The release workflow passes the git tag (v1.2.3 -> 1.2.3), so the tag is the single
 // source of the release version; the manifest in the repo is only the local default.
 // ZIP layout: BetterMoodle/manifest.json, BetterMoodle/content/..., plus LICENSE and
 // README.md, so "Load unpacked" can point straight at the extracted folder.
+//
+// Firefox build: the repo manifest is the Chrome one. For Firefox the packager rewrites it:
+// background.service_worker -> background.scripts (Firefox has no extension service workers),
+// side_panel -> sidebar_action, no "sidePanel" permission, plus a Gecko add-on id. Files sit
+// at the ZIP root (no folder), which is the layout Firefox and addons.mozilla.org expect.
 
 import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -20,12 +26,41 @@ const EXT = join(ROOT, 'extension');
 const DIST = join(ROOT, 'dist');
 
 const manifest = JSON.parse(readFileSync(join(EXT, 'manifest.json'), 'utf8'));
+const targetArg = process.argv.indexOf('--target');
+const target = targetArg > -1 ? process.argv[targetArg + 1] : 'chrome';
+if (!['chrome', 'firefox'].includes(target)) {
+  console.error(`Invalid target "${target}" (expected chrome or firefox)`);
+  process.exit(1);
+}
+const GECKO_ID = 'bettermoodle@csps0.github.io';
 const versionArg = process.argv.indexOf('--version');
 const version = String(versionArg > -1 ? process.argv[versionArg + 1] || '' : manifest.version).replace(/^v/, '');
 if (!/^\d+(\.\d+){0,3}$/.test(version)) {
   console.error(`Invalid version "${version}" (expected e.g. 1.0.0)`);
   process.exit(1);
 }
+
+function packagedManifest() {
+  if (target === 'chrome') return { ...manifest, version };
+  const { side_panel: sidePanel, background, ...rest } = manifest;
+  return {
+    ...rest,
+    version,
+    permissions: (manifest.permissions || []).filter((p) => p !== 'sidePanel'),
+    background: { scripts: [background.service_worker] },
+    sidebar_action: {
+      default_panel: sidePanel.default_path,
+      default_title: manifest.name,
+      default_icon: manifest.action?.default_icon,
+      open_at_install: false
+    },
+    browser_specific_settings: {
+      gecko: { id: GECKO_ID, strict_min_version: '128.0', data_collection_permissions: { required: ['none'] } }
+    }
+  };
+}
+
+const PREFIX = target === 'firefox' ? '' : 'BetterMoodle/';
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
@@ -35,9 +70,9 @@ function walk(dir) {
 }
 
 const entries = [
-  ...walk(EXT).map((p) => ({ src: p, name: `BetterMoodle/${relative(EXT, p).replace(/\\/g, '/')}` })),
-  { src: join(ROOT, 'LICENSE'), name: 'BetterMoodle/LICENSE' },
-  { src: join(ROOT, 'README.md'), name: 'BetterMoodle/README.md' }
+  ...walk(EXT).map((p) => ({ src: p, name: `${PREFIX}${relative(EXT, p).replace(/\\/g, '/')}` })),
+  { src: join(ROOT, 'LICENSE'), name: `${PREFIX}LICENSE` },
+  { src: join(ROOT, 'README.md'), name: `${PREFIX}README.md` }
 ]
   .filter((e) => !/(^|\/)(\.DS_Store|Thumbs\.db|desktop\.ini)$/i.test(e.name))
   .sort((a, b) => a.name.localeCompare(b.name));
@@ -60,8 +95,8 @@ const locals = [];
 const centrals = [];
 let offset = 0;
 for (const { src, name } of entries) {
-  const data = name === 'BetterMoodle/manifest.json'
-    ? Buffer.from(`${JSON.stringify({ ...manifest, version }, null, 2)}
+  const data = name === `${PREFIX}manifest.json`
+    ? Buffer.from(`${JSON.stringify(packagedManifest(), null, 2)}
 `, 'utf8')
     : readFileSync(src);
   const deflated = deflateRawSync(data, { level: 9 });
@@ -112,7 +147,9 @@ const zip = Buffer.concat([...locals, centralBuf, end]);
 
 mkdirSync(DIST, { recursive: true });
 const sha = createHash('sha256').update(zip).digest('hex');
-for (const name of ['BetterMoodle.zip', `BetterMoodle-v${version}.zip`]) {
+const base = target === 'firefox' ? 'BetterMoodle-firefox' : 'BetterMoodle';
+const outputs = [`${base}.zip`, `${base}-v${version}.zip`];
+for (const name of outputs) {
   writeFileSync(join(DIST, name), zip);
 }
-console.log(`Packaged ${entries.length} files (v${version}) -> dist/BetterMoodle.zip, dist/BetterMoodle-v${version}.zip (${(zip.length / 1024).toFixed(1)} KB, sha256 ${sha})`);
+console.log(`Packaged ${entries.length} files (${target}, v${version}) -> ${outputs.map((o) => `dist/${o}`).join(', ')} (${(zip.length / 1024).toFixed(1)} KB, sha256 ${sha})`);
