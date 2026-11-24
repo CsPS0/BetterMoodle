@@ -197,8 +197,8 @@
 
   function renderActions() {
     fill(actions, 
-      installEvent
-        ? h('button', { class: 'icon-btn', type: 'button', title: 'Telepítés', 'aria-label': 'Alkalmazás telepítése', onclick: install }, icon('install'))
+      !isStandalone()
+        ? h('button', { class: 'icon-btn', type: 'button', title: 'Telepítés', 'aria-label': 'Alkalmazás telepítése', onclick: () => (installEvent ? install() : openInstallDialog()) }, icon('install'))
         : null,
       h('button', { class: 'icon-btn', type: 'button', title: 'Megjelenés', 'aria-label': 'Megjelenés', onclick: openThemeDialog }, icon('theme')),
       session
@@ -314,6 +314,66 @@
     await installEvent.userChoice.catch(() => null);
     installEvent = null;
     renderActions();
+  }
+
+  // ---------------------------------------------------------------- install help
+  // A web app cannot be downloaded like an APK: the browser installs it from this page.
+  // Chrome / Edge (Android and desktop) offer a one-tap prompt (beforeinstallprompt);
+  // Safari on iPhone and other browsers need the manual steps below.
+  function isStandalone() {
+    return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  }
+
+  function platform() {
+    const ua = navigator.userAgent;
+    if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return 'ios';
+    if (/Android/.test(ua)) return 'android';
+    return 'desktop';
+  }
+
+  const INSTALL_STEPS = {
+    android: [
+      'Nyisd meg a Chrome menüjét (⋮) a jobb felső sarokban.',
+      'Válaszd az „Alkalmazás telepítése” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget.',
+      'Erősítsd meg a Telepítés gombbal. Az ikon megjelenik a kezdőképernyőn.'
+    ],
+    ios: [
+      'Nyisd meg ezt az oldalt Safariban.',
+      'Koppints a Megosztás gombra (négyzet felfelé mutató nyíllal).',
+      'Válaszd a „Főképernyőhöz adás” lehetőséget, majd a Hozzáadás gombot.'
+    ],
+    desktop: [
+      'Chrome-ban vagy Edge-ben kattints a címsor jobb szélén a telepítés ikonra.',
+      'Vagy a böngésző menüjében válaszd az „Alkalmazás telepítése” lehetőséget.'
+    ]
+  };
+
+  async function openInstallDialog() {
+    if (isStandalone()) {
+      await openDialog('Telepítés', h('p', null, 'A BetterMoodle már telepítve van, és alkalmazásként fut.'), [['ok', 'Rendben', 'btn-primary']]);
+      return;
+    }
+    const lead = h('p', null, 'Telepítve a BetterMoodle saját ikonnal, külön ablakban indul, mint egy telefonos alkalmazás. Nem kell semmit letölteni.');
+    if (installEvent) {
+      const answer = await openDialog('Telepítés', lead, [['cancel', 'Később'], ['install', 'Telepítés', 'btn-primary']]);
+      if (answer === 'install') install();
+      return;
+    }
+    const steps = h('ol', { class: 'steps' }, INSTALL_STEPS[platform()].map((s) => h('li', null, s)));
+    await openDialog('Telepítés', h('div', { class: 'dialog-stack' }, lead, steps), [['ok', 'Rendben', 'btn-primary']]);
+  }
+
+  // Chrome fires beforeinstallprompt shortly after load; give it a moment before falling back to steps.
+  function waitForInstallEvent(ms) {
+    if (installEvent || isStandalone()) return Promise.resolve();
+    return new Promise((resolve) => {
+      const done = () => {
+        window.removeEventListener('beforeinstallprompt', done);
+        resolve();
+      };
+      window.addEventListener('beforeinstallprompt', done);
+      setTimeout(done, ms);
+    });
   }
 
   // ---------------------------------------------------------------- login
@@ -932,6 +992,11 @@
 
   // ---------------------------------------------------------------- routing
   function route() {
+    // #/install (the website's "Telepítés" link): show the normal start screen plus install help.
+    if (/^#\/?install$/.test(location.hash)) {
+      history.replaceState(null, '', location.pathname + location.search + '#/');
+      waitForInstallEvent(1500).then(openInstallDialog);
+    }
     if (!session) return showLogin();
     const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
     const num = (v) => (/^\d+$/.test(v || '') ? Number(v) : null);

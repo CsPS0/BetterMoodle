@@ -21,7 +21,16 @@ adb reverse tcp:3000 tcp:3000   # the phone's localhost:3000 -> this computer's 
 adb shell am start -a android.intent.action.VIEW -d http://localhost:3000 com.android.chrome
 ```
 
-In Chrome, use the install button in the app's top bar, or **⋮ → Add to Home screen / Install app**. The app then opens in its own window. To inspect it, open `chrome://inspect` on the desktop.
+To inspect it, open `chrome://inspect` on the desktop.
+
+### Installing it
+
+A web app is not downloaded like an APK: the browser installs it from the page, after which it has its own home-screen icon and window. The website's **Telepítés** button opens `app/#/install`, which shows the start screen plus an install dialog:
+
+- **Android Chrome, desktop Chrome and Edge** offer a one-tap install (`beforeinstallprompt`). The dialog shows a **Telepítés** button that opens the browser's install prompt.
+- **iPhone (Safari)** and other browsers have no such prompt, so the dialog lists the steps for that platform (for example Megosztás → *Főképernyőhöz adás* on iPhone, or ⋮ → *Alkalmazás telepítése* in Chrome).
+
+The install icon in the app's top bar opens the same help and stays there until the app runs installed (`display-mode: standalone`).
 
 ## What it does
 
