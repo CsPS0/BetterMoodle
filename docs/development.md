@@ -18,7 +18,7 @@ Runs `node --check` on every JS file, validates `extension/manifest.json` (and t
 
 ## Versioning
 
-`extension/manifest.json` is the only place a version is written (`1.0.0` is the local default). The popup, options page and customizer read it at runtime via `chrome.runtime.getManifest().version`. Release builds take the version from the git tag, so the repository never needs a version bump commit.
+`extension/manifest.json` is the only place a version is written (`1.1.0` is the local default; keep it at the latest release so local and Android builds match). The popup, options page and customizer read it at runtime via `chrome.runtime.getManifest().version`. Release builds take the version from the git tag, so the repository never needs a version bump commit.
 
 ## Local build
 
@@ -43,6 +43,8 @@ Builds are reproducible: the same sources and version give a byte-identical ZIP.
 git tag v1.0.0
 git push origin v1.0.0
 ```
+
+Before tagging, add a `## 1.1.0`-style section for the new version to [`CHANGELOG.md`](../CHANGELOG.md): the release workflow uses it as the release notes, followed by GitHub's generated list of changes.
 
 `release.yml` verifies, then builds everything with the tag's version (`v1.0.0` -> `1.0.0`) and publishes it to the GitHub release:
 

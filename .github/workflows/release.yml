@@ -115,6 +115,15 @@ jobs:
           (cd dist && sha256sum BetterMoodle* > SHA256SUMS.txt)
           cat dist/SHA256SUMS.txt
 
+      - name: Release notes (CHANGELOG.md section for this version)
+        run: |
+          set -uo pipefail
+          if ! node scripts/release-notes.mjs "${{ steps.version.outputs.version }}" > "${RUNNER_TEMP}/release-notes.md"; then
+            echo "::warning::CHANGELOG.md has no section for ${{ steps.version.outputs.version }}; using generated notes only."
+            : > "${RUNNER_TEMP}/release-notes.md"
+          fi
+          cat "${RUNNER_TEMP}/release-notes.md"
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -126,4 +135,5 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: dist/*
+          body_path: ${{ runner.temp }}/release-notes.md
           generate_release_notes: true
