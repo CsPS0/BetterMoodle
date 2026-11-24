@@ -103,7 +103,8 @@
     external: ['M14 4h6v6', 'M20 4l-9 9', 'M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5'],
     book: ['M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z', 'M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5'],
     calendar: ['M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z', 'M4 10h16', 'M8 2v4', 'M16 2v4'],
-    search: ['M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M20 20l-4-4']
+    search: ['M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M20 20l-4-4'],
+    maximize: ['M4 9V4h5', 'M20 9V4h-5', 'M4 15v5h5', 'M20 15v5h-5']
   };
   function icon(name, cls = 'icon') {
     const svg = document.createElementNS(SVG_NS, 'svg');
@@ -576,7 +577,7 @@
 
   function downloadButton(file, label) {
     if (!session.downloadfiles) return null;
-    const btn = h('button', { class: 'icon-btn', type: 'button', title: `Letöltés: ${file.filename}`, 'aria-label': `Letöltés: ${file.filename}` }, icon('download'));
+    const btn = h('button', { class: label ? 'btn' : 'icon-btn', type: 'button', title: `Letöltés: ${file.filename}`, 'aria-label': `Letöltés: ${file.filename}` }, icon('download'));
     btn.addEventListener('click', async (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -678,6 +679,12 @@
     if (m.modname === 'assign') {
       return h('a', { class: 'row', href: `#/assign/${courseid}/${m.id}` }, head, icon('chevron', 'icon icon-dim'));
     }
+    if (m.modname === 'supervideo' && hasFn('mod_supervideo_get_playback_data')) {
+      return h('a', { class: 'row', href: `#/video/${courseid}/${m.id}` }, head, icon('chevron', 'icon icon-dim'));
+    }
+    if (m.modname === 'resource' && files.length === 1 && isVideoFile(files[0]) && session.downloadfiles) {
+      return h('a', { class: 'row', href: `#/video/${courseid}/${m.id}` }, head, icon('chevron', 'icon icon-dim'));
+    }
     if (m.modname === 'resource' && files.length === 1 && session.downloadfiles) {
       return h('div', { class: 'row' }, head, downloadButton(files[0]));
     }
@@ -694,6 +701,145 @@
     return href
       ? h('a', { class: 'row', href, target: '_blank', rel: 'noopener', title: 'Megnyitás a Moodle weboldalán' }, head, icon('external', 'icon icon-dim'))
       : h('div', { class: 'row' }, head);
+  }
+
+  // ---------------------------------------------------------------- video
+  // SuperVideo activities: mod_supervideo_get_playback_data (the call the official app uses)
+  // returns the source type and a player URL. Drive, YouTube and Vimeo play in their own
+  // embedded players; uploaded files play straight from webservice/pluginfile.php.
+  // Video files in plain "resource" activities play the same way.
+  const EMBED_ORIGINS = {
+    // The Drive player briefly frames accounts.google.com to check the Google sign-in (CSP frame-src).
+    drive: ['https://drive.google.com'],
+    youtube: ['https://www.youtube.com', 'https://www.youtube-nocookie.com'],
+    vimeo: ['https://player.vimeo.com']
+  };
+  const MEDIA_EXT = /\.(mp4|m4v|webm|ogv|mov|mp3|m4a|aac|ogg|wav)$/i;
+
+  function isVideoFile(file) {
+    return /^(video|audio)\//.test(file.mimetype || '') || MEDIA_EXT.test(file.filename || '');
+  }
+
+  function embedUrl(type, url) {
+    try {
+      const u = new URL(url);
+      return (EMBED_ORIGINS[type] || []).includes(u.origin) ? u.toString() : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function findModule(sections, cmid) {
+    for (const s of sections || []) {
+      const m = (s.modules || []).find((x) => x.id === cmid);
+      if (m) return m;
+    }
+    return null;
+  }
+
+  function showVideo(courseid, cmid) {
+    const ticket = ++renderTicket;
+    const back = `#/course/${courseid}`;
+    setBar({ title: 'Videó', back });
+    loading();
+    guard(ticket, async () => {
+      const sections = await cached(`course:${courseid}`, () => client.call('core_course_get_contents', { courseid }));
+      const m = findModule(sections, cmid);
+      if (!m) throw new MoodleError('notfound', 'A videó nem található, vagy nincs hozzá hozzáférésed.');
+      let content;
+      if (m.modname === 'supervideo') {
+        const data = await client.call('mod_supervideo_get_playback_data', { cmid });
+        content = data && data.content;
+        if (hasFn('mod_supervideo_view_supervideo') && m.instance) {
+          client.call('mod_supervideo_view_supervideo', { supervideoid: m.instance }).catch(() => {});
+        }
+      } else {
+        const file = (m.contents || []).find((c) => c.type === 'file');
+        if (!file) throw new MoodleError('notfound', 'Ebben az anyagban nincs fájl.');
+        content = { type: 'file', fileurl: file.fileurl, filename: file.filename, mimetype: file.mimetype, isaudio: /^audio\//.test(file.mimetype || ''), filesize: file.filesize };
+        if (hasFn('mod_resource_view_resource') && m.instance) {
+          client.call('mod_resource_view_resource', { resourceid: m.instance }).catch(() => {});
+        }
+      }
+      if (ticket !== renderTicket) return;
+      const name = toText(m.name);
+      setBar({ title: name, back });
+      renderVideo(m, name, content || {});
+    }, () => showVideo(courseid, cmid));
+  }
+
+  function renderVideo(m, name, c) {
+    const type = String(c.type || '');
+    const providerId = c.providerid || ((/\/file\/d\/([\w-]+)/.exec(c.fileurl || '') || [])[1]) || '';
+    const actions = [];
+    let player = null;
+
+    const linkBtn = (href, label, iconName) => (href
+      ? h('a', { class: 'btn', href, target: '_blank', rel: 'noopener' }, icon(iconName), label)
+      : null);
+
+    if (EMBED_ORIGINS[type]) {
+      const src = embedUrl(type, c.fileurl);
+      if (src) {
+        player = h('iframe', {
+          class: 'player-frame', src, title: name,
+          allow: 'autoplay; fullscreen; picture-in-picture; encrypted-media',
+          // YouTube refuses embeds without a referrer; the page itself sends none.
+          referrerpolicy: 'strict-origin-when-cross-origin'
+        });
+      }
+      if (type === 'drive' && providerId) {
+        actions.push(linkBtn(`https://drive.usercontent.google.com/download?id=${encodeURIComponent(providerId)}&export=download`, 'Letöltés', 'download'));
+        actions.push(linkBtn(`https://drive.google.com/file/d/${encodeURIComponent(providerId)}/view`, 'Megnyitás a Drive-ban', 'external'));
+      } else if (type === 'youtube' && providerId) {
+        actions.push(linkBtn(`https://www.youtube.com/watch?v=${encodeURIComponent(providerId)}`, 'Megnyitás a YouTube-on', 'external'));
+      } else if (type === 'vimeo' && providerId) {
+        actions.push(linkBtn(`https://vimeo.com/${encodeURIComponent(providerId)}`, 'Megnyitás a Vimeón', 'external'));
+      }
+    } else if (type === 'file') {
+      const src = client.fileUrl(c.fileurl);
+      if (src) {
+        player = h(c.isaudio ? 'audio' : 'video', { class: c.isaudio ? 'player-audio' : 'player-video', src, controls: true, playsinline: true, preload: 'metadata' });
+        actions.push(downloadButton({ filename: c.filename || 'video', fileurl: c.fileurl, filesize: c.filesize }, 'Letöltés'));
+      }
+    } else if (type === 'link' && !c.ishls) {
+      const src = safeHref(c.fileurl);
+      if (src && (c.isaudio || MEDIA_EXT.test(new URL(src).pathname))) {
+        player = h(c.isaudio ? 'audio' : 'video', { class: c.isaudio ? 'player-audio' : 'player-video', src, controls: true, playsinline: true, preload: 'metadata' });
+      }
+      actions.push(linkBtn(src, 'Megnyitás új lapon', 'external'));
+    }
+
+    actions.push(linkBtn(safeHref(m.url), 'Megnyitás a Moodle-ben', 'external'));
+    const wrap = player
+      ? h('div', { class: c.isaudio ? 'player player-is-audio' : type === 'drive' ? 'player player-drive' : 'player' }, player)
+      : null;
+    // Embedded players (Drive, YouTube, Vimeo) keep their own controls, which the app cannot
+    // restyle. Full screen in landscape gives those controls the room they are laid out for.
+    if (wrap && EMBED_ORIGINS[type] && typeof wrap.requestFullscreen === 'function') {
+      wrap.append(h('button', {
+        class: 'player-exit', type: 'button', title: 'Kilépés a teljes képernyőből', 'aria-label': 'Kilépés a teljes képernyőből',
+        onclick: () => document.exitFullscreen().catch(() => {})
+      }, icon('x')));
+      actions.unshift(h('button', {
+        class: 'btn btn-primary', type: 'button',
+        onclick: async () => {
+          try {
+            await wrap.requestFullscreen({ navigationUI: 'hide' });
+            if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape').catch(() => {});
+          } catch {
+            announce('A teljes képernyő itt nem érhető el.', 'error');
+          }
+        }
+      }, icon('maximize'), 'Teljes képernyő'));
+    }
+    fill(view,
+      h('section', { class: 'course-head' }, h('h1', { title: name }, name)),
+      wrap || h('p', { class: 'note' }, 'Ez a videótípus az alkalmazásban nem játszható le. Nyisd meg a Moodle weboldalán.'),
+      type === 'drive'
+        ? h('p', { class: 'fine' }, 'A Google Drive-videók csak akkor indulnak, ha a böngészőben be vagy jelentkezve egy olyan Google-fiókkal, amely hozzáfér a fájlhoz.')
+        : null,
+      h('div', { class: 'actions' }, actions));
   }
 
   // ---------------------------------------------------------------- assignment
@@ -1002,9 +1148,19 @@
     const num = (v) => (/^\d+$/.test(v || '') ? Number(v) : null);
     if (parts[0] === 'course' && num(parts[1])) return showCourse(num(parts[1]));
     if (parts[0] === 'assign' && num(parts[1]) && num(parts[2])) return showAssign(num(parts[1]), num(parts[2]));
+    if (parts[0] === 'video' && num(parts[1]) && num(parts[2])) return showVideo(num(parts[1]), num(parts[2]));
     return showDashboard();
   }
 
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && screen.orientation && screen.orientation.unlock) {
+      try {
+        screen.orientation.unlock();
+      } catch {
+        // Orientation lock is not supported here.
+      }
+    }
+  });
   window.addEventListener('hashchange', () => {
     window.scrollTo(0, 0);
     route();
