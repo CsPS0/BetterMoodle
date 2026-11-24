@@ -103,7 +103,8 @@
     external: ['M14 4h6v6', 'M20 4l-9 9', 'M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5'],
     book: ['M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z', 'M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5'],
     calendar: ['M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z', 'M4 10h16', 'M8 2v4', 'M16 2v4'],
-    search: ['M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M20 20l-4-4']
+    search: ['M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M20 20l-4-4'],
+    maximize: ['M4 9V4h5', 'M20 9V4h-5', 'M4 15v5h5', 'M20 15v5h-5']
   };
   function icon(name, cls = 'icon') {
     const svg = document.createElementNS(SVG_NS, 'svg');
@@ -810,11 +811,31 @@
     }
 
     actions.push(linkBtn(safeHref(m.url), 'Megnyitás a Moodle-ben', 'external'));
+    const wrap = player
+      ? h('div', { class: c.isaudio ? 'player player-is-audio' : type === 'drive' ? 'player player-drive' : 'player' }, player)
+      : null;
+    // Embedded players (Drive, YouTube, Vimeo) keep their own controls, which the app cannot
+    // restyle. Full screen in landscape gives those controls the room they are laid out for.
+    if (wrap && EMBED_ORIGINS[type] && typeof wrap.requestFullscreen === 'function') {
+      wrap.append(h('button', {
+        class: 'player-exit', type: 'button', title: 'Kilépés a teljes képernyőből', 'aria-label': 'Kilépés a teljes képernyőből',
+        onclick: () => document.exitFullscreen().catch(() => {})
+      }, icon('x')));
+      actions.unshift(h('button', {
+        class: 'btn btn-primary', type: 'button',
+        onclick: async () => {
+          try {
+            await wrap.requestFullscreen({ navigationUI: 'hide' });
+            if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape').catch(() => {});
+          } catch {
+            announce('A teljes képernyő itt nem érhető el.', 'error');
+          }
+        }
+      }, icon('maximize'), 'Teljes képernyő'));
+    }
     fill(view,
       h('section', { class: 'course-head' }, h('h1', { title: name }, name)),
-      player
-        ? h('div', { class: c.isaudio ? 'player player-is-audio' : type === 'drive' ? 'player player-drive' : 'player' }, player)
-        : h('p', { class: 'note' }, 'Ez a videótípus az alkalmazásban nem játszható le. Nyisd meg a Moodle weboldalán.'),
+      wrap || h('p', { class: 'note' }, 'Ez a videótípus az alkalmazásban nem játszható le. Nyisd meg a Moodle weboldalán.'),
       type === 'drive'
         ? h('p', { class: 'fine' }, 'A Google Drive-videók csak akkor indulnak, ha a böngészőben be vagy jelentkezve egy olyan Google-fiókkal, amely hozzáfér a fájlhoz.')
         : null,
@@ -1131,6 +1152,15 @@
     return showDashboard();
   }
 
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && screen.orientation && screen.orientation.unlock) {
+      try {
+        screen.orientation.unlock();
+      } catch {
+        // Orientation lock is not supported here.
+      }
+    }
+  });
   window.addEventListener('hashchange', () => {
     window.scrollTo(0, 0);
     route();

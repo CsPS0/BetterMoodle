@@ -508,6 +508,34 @@ details > summary::-webkit-details-marker { display: none; }
   background: var(--bg-surface);
 }
 .player-audio { display: block; width: 100%; }
+.player { position: relative; }
+.player.player-drive:fullscreen,
+.player:fullscreen {
+  aspect-ratio: auto;
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  border-radius: 0;
+}
+.player-exit {
+  display: none;
+  position: absolute;
+  /* Bottom left: Drive puts its progress bar along the top and its controls bottom centre/right */
+  bottom: max(12px, env(safe-area-inset-bottom));
+  left: max(12px, env(safe-area-inset-left));
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  cursor: pointer;
+}
+.player:fullscreen .player-exit { display: inline-flex; }
+.player-exit:active { transform: scale(0.97); }
 
 /* States ------------------------------------------------------------------ */
 .state {
