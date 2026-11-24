@@ -3320,6 +3320,16 @@ html[data-mp-active="true"] body.mp-overhaul-active:not([data-mp-page="login"]) 
   border: none !important;
 }
 
+/* Phones: Google Drive's mobile player stacks two control bars under the picture, which a
+   16:9 box cuts off. A square box gives them room (desktop and other players stay 16:9). */
+@media (max-width: 600px) {
+  :where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #videoWrap:has(iframe[src*="drive.google.com"]),
+  :where(html[data-mp-active="true"]) body.mp-overhaul-active.path-mod-supervideo #supervideo_area_embed:has(iframe[src*="drive.google.com"]),
+  :where(html[data-mp-active="true"]) .mp-inline-player-wrap:has(iframe[src*="drive.google.com"]) {
+    aspect-ratio: 1 / 1 !important;
+  }
+}
+
 :where(html[data-mp-active="true"]) #mp-cinema-mobile-bar {
   width: 100%;
   max-width: 1160px;
