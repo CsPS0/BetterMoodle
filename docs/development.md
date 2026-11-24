@@ -18,7 +18,7 @@ Runs `node --check` on every JS file, validates `extension/manifest.json` (and t
 
 ## Versioning
 
-`extension/manifest.json` is the only place a version is written (`1.2.0` is the local default; keep it at the latest release so local and Android builds match). The popup, options page and customizer read it at runtime via `chrome.runtime.getManifest().version`. Release builds take the version from the git tag, so the repository never needs a version bump commit.
+`extension/manifest.json` is the only place a version is written (`1.2.1` is the local default; keep it at the latest release so local and Android builds match). The popup, options page and customizer read it at runtime via `chrome.runtime.getManifest().version`. Release builds take the version from the git tag, so the repository never needs a version bump commit.
 
 ## Local build
 

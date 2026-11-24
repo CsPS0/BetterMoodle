@@ -2,9 +2,20 @@
 
 Each release's section below is also used as its GitHub release notes (`release.yml` reads the section whose heading matches the tag's version).
 
-## Unreleased
+## 1.2.1
 
-- **Extension and Android app:** on phones, Google Drive videos get a square player, so Google's control bars are no longer cut off.
+### What's new
+
+- **Extension and Android app:** on phones, Google Drive videos in SuperVideo activities now get a square player, so Google's control bars (play, time, volume, settings, fullscreen) are no longer cut off. Desktop keeps the wide player.
+
+### Known issues
+
+- **Updating the Android app still needs an uninstall:** the APK is signed with a temporary key on each build. Uninstall the old app first and sign in again.
+- The other 1.2.0 and 1.1.0 known issues below still apply.
+
+### Coming next
+
+Unchanged from 1.2.0: a permanent signing key for the Android app, a tested and signed Firefox version, and the planned web app additions.
 
 ## 1.2.0
 
