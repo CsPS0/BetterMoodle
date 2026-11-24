@@ -18,7 +18,7 @@ Runs `node --check` on every JS file, validates `extension/manifest.json` (and t
 
 ## Versioning
 
-`extension/manifest.json` is the only place a version is written (`1.1.0` is the local default; keep it at the latest release so local and Android builds match). The popup, options page and customizer read it at runtime via `chrome.runtime.getManifest().version`. Release builds take the version from the git tag, so the repository never needs a version bump commit.
+`extension/manifest.json` is the only place a version is written (`1.2.0` is the local default; keep it at the latest release so local and Android builds match). The popup, options page and customizer read it at runtime via `chrome.runtime.getManifest().version`. Release builds take the version from the git tag, so the repository never needs a version bump commit.
 
 ## Local build
 
@@ -53,10 +53,10 @@ Before tagging, add a `## 1.1.0`-style section for the new version to [`CHANGELO
 | `BetterMoodle.zip`, `BetterMoodle-v1.0.0.zip` | Chrome / Edge extension |
 | `BetterMoodle-firefox.zip`, `BetterMoodle-firefox-v1.0.0.zip` | Firefox extension |
 | `BetterMoodle-webapp.zip` | The web app (`webapp/`) as static files |
-| `BetterMoodle-android.apk` or `BetterMoodle-android-debug.apk` | Android wrapper, only when `android/` is in the tagged commit |
+| `BetterMoodle-android.apk` | Android wrapper (`android/`) |
 | `SHA256SUMS.txt` | Checksums of the above |
 
-The Android APK is signed with the release key when the repository secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD` are set. Without them it is debug-signed with a throwaway key, so each new APK must replace the old one by uninstalling first.
+The Android APK is signed with the release key when the repository secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD` are set. Without them (the current setup) it is debug-signed with a throwaway key, so each new APK must replace the old one by uninstalling first. The file name is the same either way, so the website's download link keeps working.
 
 `ci.yml` runs `verify.mjs` and packages both extension builds on every push and pull request. The website's download button always points at `https://github.com/CsPS0/BetterMoodle/releases/latest/download/BetterMoodle.zip`, so it picks up each new release automatically.
 

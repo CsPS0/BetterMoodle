@@ -5,8 +5,8 @@ name: Build and Release BetterMoodle
 #   BetterMoodle.zip                     Chrome / Edge extension (Load unpacked)
 #   BetterMoodle-firefox.zip             Firefox extension (about:debugging, or for signing on AMO)
 #   BetterMoodle-webapp.zip              Web app (PWA) as static files; also deployed by pages.yml
-#   BetterMoodle-android.apk             Android wrapper, signed with the release key (see below)
-#   BetterMoodle-android-debug.apk       ...or a debug-signed APK when no release key is configured
+#   BetterMoodle-android.apk             Android wrapper, signed with the release key when one is configured
+#                                        (see below), otherwise debug-signed
 #   SHA256SUMS.txt
 #
 # The Android build runs only when android/ exists in the tagged commit.
@@ -106,7 +106,7 @@ jobs:
           else
             echo "::warning::No Android release key configured; publishing a debug-signed APK."
             ./gradlew --no-daemon assembleDebug
-            cp app/build/outputs/apk/debug/app-debug.apk ../dist/BetterMoodle-android-debug.apk
+            cp app/build/outputs/apk/debug/app-debug.apk ../dist/BetterMoodle-android.apk
           fi
 
       - name: Checksums

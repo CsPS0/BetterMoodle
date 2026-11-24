@@ -31,7 +31,7 @@
 
 ## Installation
 
-> **Availability:** The extension works in desktop Chrome and Edge. A Firefox build (`BetterMoodle-firefox.zip`, experimental, load it via `about:debugging`) is attached to each release. On phones, use the installable [web app](https://csps0.github.io/BetterMoodle/app/) ([docs/webapp.md](docs/webapp.md)); a native Android app is in progress.
+> **Availability:** The extension works in desktop Chrome and Edge. A Firefox build (`BetterMoodle-firefox.zip`, experimental, load it via `about:debugging`) is attached to each release. On Android phones, install the BetterMoodle app (`BetterMoodle-android.apk` from the [latest release](https://github.com/CsPS0/BetterMoodle/releases/latest)), which runs the same code on your Moodle site in a WebView ([docs/android.md](docs/android.md)). On any phone you can also use the installable [web app](https://csps0.github.io/BetterMoodle/app/) ([docs/webapp.md](docs/webapp.md)).
 
 1. Download `BetterMoodle.zip` from the [latest GitHub release](https://github.com/CsPS0/BetterMoodle/releases/latest) (or via the [website](https://csps0.github.io/BetterMoodle/)) and extract it.
 2. Open `chrome://extensions` (or `edge://extensions`) and enable **Developer mode**.
@@ -44,6 +44,7 @@ Working from a clone? Load the [`extension/`](extension/) folder directly.
 ```text
 BetterMoodle/
 ├── extension/           # The unpacked MV3 extension (manifest, content, popup, sidepanel, options, icons)
+├── android/             # Android WebView wrapper that runs extension/content/* on your Moodle site
 ├── webapp/              # Installable web app (PWA) on the Moodle mobile API (see docs/webapp.md)
 ├── website/             # GitHub Pages site (index.html at the site root, previews)
 ├── docs/                # Architecture and development documentation
@@ -62,7 +63,7 @@ node scripts/package.mjs           # local test build -> dist/BetterMoodle.zip
 
 Releases are built by CI: push a tag like `v1.1.0` and the release workflow builds the Chrome and Firefox extensions and the web app with that version, attaches them to the GitHub release, and uses that version's section of [CHANGELOG.md](CHANGELOG.md) as the release notes.
 
-See [docs/development.md](docs/development.md) and [docs/architecture.md](docs/architecture.md).
+See [docs/development.md](docs/development.md), [docs/architecture.md](docs/architecture.md) and [docs/android.md](docs/android.md).
 
 ## License
 

@@ -2,6 +2,36 @@
 
 Each release's section below is also used as its GitHub release notes (`release.yml` reads the section whose heading matches the tag's version).
 
+## 1.2.0
+
+### What's new
+
+**Android app (new).** Each release now includes `BetterMoodle-android.apk`: a small Android app that opens your own Moodle site and runs the extension's full interface on it, the same code as in desktop Chrome. Download it from the website's Android row or from this release, open it, and allow the install when Android asks.
+
+- On first launch it asks for your Moodle address (pasted page links are trimmed to the site root, HTTPS only). After that it opens your dashboard directly.
+- You sign in on Moodle's own login page, as in a browser.
+- Course videos and file downloads work through the extension, as in the browser. Files go to Android's Downloads.
+- Uploading to an assignment opens Android's file picker.
+- The back button first closes open overlays (file picker, sidebar, customizer) before leaving the page.
+
+**Extension.** Moodle's file picker (*Állományválasztó*) is now readable in the dark themes: its repository list, toolbar, file views and confirmation panel follow the theme. On phones it sits above the BetterMoodle top bar. Phones also get a tidier top bar and a month calendar that no longer cuts event names short.
+
+**Website.** The Android row now has a **Letöltés (.apk)** button.
+
+### Known issues
+
+- **Updating the Android app needs an uninstall.** The APK is signed with a temporary key on each build, so a newer APK cannot install over an older one. Uninstall the old app first; you will need to sign in again. A permanent signing key is planned.
+- **Android app testing so far:** one phone (Samsung Galaxy A52s, Android 14) against one school's Moodle. The popup's media list and the side panel have no Android screen yet.
+- The 1.1.0 known issues below still apply: the Firefox build is untested and unsigned, and the web app needs a Moodle password, among others.
+
+### Coming next
+
+These are planned, not promised:
+
+- A permanent signing key for the Android app, so updates install without uninstalling.
+- **Firefox:** testing in a real Firefox, then a signed version on addons.mozilla.org.
+- **Web app:** a sign-in option for schools that only use single sign-on, more activity types inside the app, and an explicit, confirmed **submit for grading** button.
+
 ## 1.1.0
 
 ### What's new
