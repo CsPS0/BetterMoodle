@@ -2,6 +2,10 @@
 
 Each release's section below is also used as its GitHub release notes (`release.yml` reads the section whose heading matches the tag's version).
 
+## Unreleased
+
+- **Extension and Android app:** on phones, Google Drive videos get a square player, so Google's control bars are no longer cut off.
+
 ## 1.2.0
 
 ### What's new
