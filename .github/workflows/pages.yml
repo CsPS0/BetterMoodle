@@ -1,6 +1,7 @@
 name: Deploy website to GitHub Pages
 
-# Publishes the website/ directory as the site root (website/index.html -> /).
+# Publishes the website/ directory as the site root (website/index.html -> /) and the
+# web app (webapp/) under /app/.
 # The download button links the latest GitHub release asset; builds are not hosted here.
 # One-time setup: repository Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
 
@@ -10,6 +11,7 @@ on:
       - main
     paths:
       - 'website/**'
+      - 'webapp/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -37,13 +39,19 @@ jobs:
       - name: Verify
         run: node scripts/verify.mjs
 
+      - name: Assemble site (website at the root, web app under /app/)
+        run: |
+          rm -rf _site
+          cp -r website _site
+          cp -r webapp _site/app
+
       - name: Configure Pages
         uses: actions/configure-pages@v6
 
       - name: Upload website artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: website
+          path: _site
 
   deploy:
     needs: build

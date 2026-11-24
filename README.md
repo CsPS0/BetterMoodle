@@ -31,7 +31,7 @@
 
 ## Installation
 
-> **Availability:** BetterMoodle currently works on desktop and laptop computers in Google Chrome only. A dedicated mobile app and Firefox support are planned.
+> **Availability:** The extension works in desktop Chrome and Edge. A Firefox build (`BetterMoodle-firefox.zip`, experimental, load it via `about:debugging`) is attached to each release. On phones, use the installable [web app](https://csps0.github.io/BetterMoodle/app/) ([docs/webapp.md](docs/webapp.md)); a native Android app is in progress.
 
 1. Download `BetterMoodle.zip` from the [latest GitHub release](https://github.com/CsPS0/BetterMoodle/releases/latest) (or via the [website](https://csps0.github.io/BetterMoodle/)) and extract it.
 2. Open `chrome://extensions` (or `edge://extensions`) and enable **Developer mode**.
@@ -44,10 +44,11 @@ Working from a clone? Load the [`extension/`](extension/) folder directly.
 ```text
 BetterMoodle/
 ├── extension/           # The unpacked MV3 extension (manifest, content, popup, sidepanel, options, icons)
+├── webapp/              # Installable web app (PWA) on the Moodle mobile API (see docs/webapp.md)
 ├── website/             # GitHub Pages site (index.html at the site root, previews)
 ├── docs/                # Architecture and development documentation
 ├── scripts/             # verify.mjs and package.mjs (zero-dependency Node scripts)
-├── .github/workflows/   # release.yml (tag v* -> GitHub Release ZIP) and pages.yml (website deploy)
+├── .github/workflows/   # ci.yml (verify), release.yml (tag v* -> Chrome/Firefox ZIPs, web app ZIP, APK) and pages.yml (website + /app/)
 ├── LICENSE
 └── README.md
 ```

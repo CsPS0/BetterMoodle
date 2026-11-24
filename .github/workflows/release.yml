@@ -1,5 +1,21 @@
 name: Build and Release BetterMoodle
 
+# On a v* tag, builds every BetterMoodle app with the tag as its version and attaches them
+# to a GitHub release:
+#   BetterMoodle.zip                     Chrome / Edge extension (Load unpacked)
+#   BetterMoodle-firefox.zip             Firefox extension (about:debugging, or for signing on AMO)
+#   BetterMoodle-webapp.zip              Web app (PWA) as static files; also deployed by pages.yml
+#   BetterMoodle-android.apk             Android wrapper, signed with the release key (see below)
+#   BetterMoodle-android-debug.apk       ...or a debug-signed APK when no release key is configured
+#   SHA256SUMS.txt
+#
+# The Android build runs only when android/ exists in the tagged commit.
+# Release signing (optional) uses these repository secrets:
+#   ANDROID_KEYSTORE_BASE64 (base64 of the .jks), ANDROID_KEYSTORE_PASSWORD,
+#   ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+# Without them the APK is debug-signed with a throwaway key, so a newer one cannot be
+# installed over an older one (uninstall first).
+
 on:
   push:
     tags:
@@ -24,7 +40,8 @@ jobs:
       - name: Verify syntax, manifest, integrity and CSS scoping
         run: node scripts/verify.mjs
 
-      - name: Package extension (version from the tag)
+      - name: Resolve version (from the tag)
+        id: version
         run: |
           set -euo pipefail
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
@@ -32,8 +49,70 @@ jobs:
           else
             VERSION="$(node -p 'require("./extension/manifest.json").version')"
           fi
-          node scripts/package.mjs --version "${VERSION}"
-          (cd dist && sha256sum BetterMoodle*.zip > SHA256SUMS.txt)
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Package Chrome and Firefox extensions
+        run: |
+          set -euo pipefail
+          node scripts/package.mjs --version "${{ steps.version.outputs.version }}"
+          node scripts/package.mjs --target firefox --version "${{ steps.version.outputs.version }}"
+
+      - name: Package web app
+        run: |
+          set -euo pipefail
+          (cd webapp && zip -qr -X ../dist/BetterMoodle-webapp.zip .)
+
+      - name: Check for the Android app
+        id: android
+        run: |
+          if [ -f android/settings.gradle.kts ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::android/ is not in this commit, skipping the APK build."
+          fi
+
+      - name: Setup Java
+        if: steps.android.outputs.present == 'true'
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build Android APK
+        if: steps.android.outputs.present == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          # The APK takes its versionName from the extension manifest: stamp the tag version there.
+          node -e 'const f="extension/manifest.json",fs=require("fs"),m=JSON.parse(fs.readFileSync(f));m.version=process.env.VERSION;fs.writeFileSync(f,JSON.stringify(m,null,2)+"\n")'
+          cd android
+          chmod +x gradlew
+          if [ -n "${ANDROID_KEYSTORE_BASE64}" ]; then
+            ./gradlew --no-daemon assembleRelease
+            echo "${ANDROID_KEYSTORE_BASE64}" | base64 -d > "${RUNNER_TEMP}/release.jks"
+            BUILD_TOOLS="$(ls -d "${ANDROID_HOME}"/build-tools/* | sort -V | tail -1)"
+            "${BUILD_TOOLS}/zipalign" -p -f 4 app/build/outputs/apk/release/app-release-unsigned.apk "${RUNNER_TEMP}/aligned.apk"
+            "${BUILD_TOOLS}/apksigner" sign \
+              --ks "${RUNNER_TEMP}/release.jks" --ks-pass env:ANDROID_KEYSTORE_PASSWORD \
+              --ks-key-alias "${ANDROID_KEY_ALIAS}" --key-pass env:ANDROID_KEY_PASSWORD \
+              --out ../dist/BetterMoodle-android.apk "${RUNNER_TEMP}/aligned.apk"
+            rm -f "${RUNNER_TEMP}/release.jks"
+          else
+            echo "::warning::No Android release key configured; publishing a debug-signed APK."
+            ./gradlew --no-daemon assembleDebug
+            cp app/build/outputs/apk/debug/app-debug.apk ../dist/BetterMoodle-android-debug.apk
+          fi
+
+      - name: Checksums
+        run: |
+          set -euo pipefail
+          (cd dist && sha256sum BetterMoodle* > SHA256SUMS.txt)
           cat dist/SHA256SUMS.txt
 
       - name: Upload build artifacts

@@ -301,6 +301,10 @@ a {
   transition: background-color 120ms ease-out, transform 60ms ease-out;
 }
 
+a.btn-secondary {
+  text-decoration: none;
+}
+
 .btn-secondary:hover {
   background-color: var(--bg-hover);
 }
@@ -578,6 +582,10 @@ kbd {
     align-items: flex-start;
   }
 
+  .platform-icon {
+    display: none;
+  }
+
   .row-control {
     width: 100%;
     justify-content: flex-start;
@@ -631,6 +639,23 @@ kbd {
 
 .availability-text .row-label {
   white-space: normal;
+}
+
+.platform-icon {
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.row-label .version-pill {
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+.row-desc code {
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 
 /* --------------------------------------------------------------------------

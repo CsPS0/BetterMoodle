@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>BetterMoodle</title>
+  <meta name="description" content="BetterMoodle: határidők, kurzusok és feladatbeadás a saját Moodle-oldaladról, egy telepíthető alkalmazásban.">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="app.css">
+  <script src="js/site.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <button id="bar-back" class="icon-btn" type="button" title="Vissza" aria-label="Vissza" hidden>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <img class="bar-logo" src="icons/logo.svg" alt="" width="24" height="24">
+    <span id="bar-title" class="bar-title">BetterMoodle</span>
+    <div id="bar-actions" class="bar-actions"></div>
+  </header>
+  <main id="view" class="view">
+    <noscript><p class="state">A BetterMoodle működéséhez engedélyezd a JavaScriptet.</p></noscript>
+  </main>
+  <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+  <dialog id="dialog" class="dialog"></dialog>
+</body>
+</html>

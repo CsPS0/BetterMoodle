@@ -1,0 +1,33 @@
+name: CI
+
+# Every push and pull request: run the verification suite and make sure both extension
+# builds (Chrome and Firefox) still package. Releases are built by release.yml from v* tags.
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Verify
+        run: node scripts/verify.mjs
+
+      - name: Package Chrome and Firefox extensions
+        run: |
+          node scripts/package.mjs
+          node scripts/package.mjs --target firefox

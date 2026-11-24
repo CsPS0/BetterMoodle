@@ -122,6 +122,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Side Panel & Options Navigation
   document.getElementById('openSidePanelBtn').addEventListener('click', async () => {
+    // Firefox has a sidebar instead of the side panel; open() must run synchronously in the click handler.
+    const sidebar = (globalThis.browser || chrome).sidebarAction;
+    if (!chrome.sidePanel && sidebar && typeof sidebar.open === 'function') {
+      sidebar.open().catch(() => {}).finally(() => window.close());
+      return;
+    }
     try {
       if (chrome.sidePanel && typeof chrome.sidePanel.open === 'function' && activeTab?.windowId) {
         await chrome.sidePanel.open({ windowId: activeTab.windowId });
