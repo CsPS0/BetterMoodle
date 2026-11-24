@@ -60,7 +60,7 @@ node scripts/verify.mjs             # syntax, manifest, integrity and CSS-scope 
 node scripts/package.mjs           # local test build -> dist/BetterMoodle.zip
 ```
 
-Releases are built by CI: push a tag like `v1.0.0` and the release workflow packages the extension with that version and attaches `BetterMoodle.zip` to the GitHub release.
+Releases are built by CI: push a tag like `v1.1.0` and the release workflow builds the Chrome and Firefox extensions and the web app with that version, attaches them to the GitHub release, and uses that version's section of [CHANGELOG.md](CHANGELOG.md) as the release notes.
 
 See [docs/development.md](docs/development.md) and [docs/architecture.md](docs/architecture.md).
 
