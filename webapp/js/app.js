@@ -813,7 +813,7 @@
     fill(view,
       h('section', { class: 'course-head' }, h('h1', { title: name }, name)),
       player
-        ? h('div', { class: c.isaudio ? 'player player-is-audio' : 'player' }, player)
+        ? h('div', { class: c.isaudio ? 'player player-is-audio' : type === 'drive' ? 'player player-drive' : 'player' }, player)
         : h('p', { class: 'note' }, 'Ez a videótípus az alkalmazásban nem játszható le. Nyisd meg a Moodle weboldalán.'),
       type === 'drive'
         ? h('p', { class: 'fine' }, 'A Google Drive-videók csak akkor indulnak, ha a böngészőben be vagy jelentkezve egy olyan Google-fiókkal, amely hozzáfér a fájlhoz.')

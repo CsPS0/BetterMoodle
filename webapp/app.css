@@ -496,6 +496,12 @@ details > summary::-webkit-details-marker { display: none; }
   height: 100%;
   border: 0;
 }
+/* Google Drive's player draws its control bar below the picture: give it room */
+.player.player-drive { aspect-ratio: 4 / 3; }
+@media (max-width: 600px) {
+  /* On phones Drive stacks two control bars under the picture */
+  .player.player-drive { aspect-ratio: 1 / 1; }
+}
 .player.player-is-audio {
   aspect-ratio: auto;
   padding: 12px;
