@@ -708,6 +708,7 @@
   // embedded players; uploaded files play straight from webservice/pluginfile.php.
   // Video files in plain "resource" activities play the same way.
   const EMBED_ORIGINS = {
+    // The Drive player briefly frames accounts.google.com to check the Google sign-in (CSP frame-src).
     drive: ['https://drive.google.com'],
     youtube: ['https://www.youtube.com', 'https://www.youtube-nocookie.com'],
     vimeo: ['https://player.vimeo.com']
@@ -782,7 +783,6 @@
         player = h('iframe', {
           class: 'player-frame', src, title: name,
           allow: 'autoplay; fullscreen; picture-in-picture; encrypted-media',
-          allowfullscreen: true,
           // YouTube refuses embeds without a referrer; the page itself sends none.
           referrerpolicy: 'strict-origin-when-cross-origin'
         });
