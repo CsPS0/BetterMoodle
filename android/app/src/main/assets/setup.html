@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BetterMoodle</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #121215;
+      --surface-2: #18181c;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #3b82f6;
+      --accent-fill: #2563eb;
+      --danger: #ef4444;
+      color-scheme: dark;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f4f4f5;
+        --surface: #ffffff;
+        --surface-2: #f8f8fa;
+        --border: #e4e4e7;
+        --border-strong: #d4d4d8;
+        --text: #18181b;
+        --muted: #52525b;
+        --accent: #2563eb;
+        --accent-fill: #2563eb;
+        --danger: #dc2626;
+        color-scheme: light;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      min-height: 100vh;
+    }
+    main {
+      width: 100%;
+      max-width: 400px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .brand svg { flex-shrink: 0; }
+    h1 { font-size: 15px; font-weight: 700; margin: 0; }
+    p { margin: 0 0 14px; color: var(--muted); }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    input {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+    }
+    input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .hint { font-size: 11px; color: var(--muted); margin: 6px 0 0; }
+    .error {
+      display: none;
+      margin: 12px 0 0;
+      padding: 8px 10px;
+      border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+      background: color-mix(in srgb, var(--danger) 12%, transparent);
+      color: var(--text);
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .error.show { display: block; }
+    button {
+      margin-top: 16px;
+      width: 100%;
+      min-height: 40px;
+      font: inherit;
+      font-weight: 600;
+      color: #ffffff;
+      background: var(--accent-fill);
+      border: 1px solid var(--accent-fill);
+      border-radius: 4px;
+    }
+    button:active { transform: scale(0.97); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">
+      <svg width="28" height="28" viewBox="16 24 100 82" fill="none" aria-hidden="true"><path d="M 26 80 V 38 L 50 62 L 74 38 V 80" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M 97 34 V 56 M 86 45 H 108" stroke="var(--accent)" stroke-width="10" stroke-linecap="round"/><path d="M 26 97 H 102" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/></svg>
+      <h1>BetterMoodle</h1>
+    </div>
+    <p>Add meg az iskolád Moodle-címét. Bármelyik Moodle-oldal hivatkozása jó, a gyökércímet az app megkeresi.</p>
+    <form id="form" novalidate>
+      <label for="site">Moodle-cím</label>
+      <input id="site" name="site" type="url" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="https://moodle.iskola.hu" required>
+      <div class="hint">Csak HTTPS-címek támogatottak. Később a kezdőképernyő-ikon hosszú lenyomásával módosítható.</div>
+      <div id="error" class="error" role="alert"></div>
+      <button type="submit">Megnyitás</button>
+    </form>
+  </main>
+  <script>
+    (function () {
+      'use strict';
+      var params = new URLSearchParams(window.location.search);
+      var input = document.getElementById('site');
+      var errorBox = document.getElementById('error');
+      var retry = params.get('retry') || '';
+
+      function showError(text) {
+        errorBox.textContent = text;
+        errorBox.classList.toggle('show', Boolean(text));
+      }
+
+      input.value = params.get('site') || '';
+      if (params.get('error')) showError(params.get('error'));
+
+      var bridge = window.BetterMoodleSetup;
+      if (bridge) {
+        bridge.onmessage = function (event) {
+          try {
+            var msg = JSON.parse(event.data);
+            if (msg.type === 'ERROR') showError(msg.message);
+          } catch (_) {}
+        };
+      } else {
+        showError('Ez a WebView-verzió túl régi. Frissítsd az Android System WebView-t a Play Áruházban.');
+      }
+
+      document.getElementById('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        showError('');
+        if (!bridge) return;
+        bridge.postMessage(JSON.stringify({ type: 'SET_SITE', url: input.value, retry: retry }));
+      });
+
+      if (!input.value) input.focus();
+    })();
+  </script>
+</body>
+</html>

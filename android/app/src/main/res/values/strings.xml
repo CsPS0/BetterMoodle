@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BetterMoodle</string>
+    <string name="shortcut_change_site_short">Moodle-cím</string>
+    <string name="shortcut_change_site_long">Moodle-cím módosítása</string>
+    <string name="download_started">Letöltés elindult: %1$s</string>
+    <string name="download_unsupported">Ez a fájl nem tölthető le az alkalmazásból</string>
+    <string name="no_app_for_link">Nincs alkalmazás a hivatkozás megnyitásához</string>
+    <string name="no_file_picker">Nincs fájlválasztó alkalmazás</string>
+</resources>

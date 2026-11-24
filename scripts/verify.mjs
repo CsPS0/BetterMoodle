@@ -10,6 +10,7 @@
 //   5. The website has one download, pointing at the latest GitHub release asset
 //   6. No hardcoded "vX.Y.Z" version strings (the version lives only in manifest.json)
 //   7. The web app (webapp/) gets the same syntax, leak and emoji checks, plus PWA shell checks
+//   8. The Android wrapper (android/app/src) gets the same syntax, leak and emoji checks
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
@@ -21,6 +22,7 @@ const EXT = join(ROOT, 'extension');
 const SITE = join(ROOT, 'website');
 const WEBAPP = join(ROOT, 'webapp');
 const webappFiles = existsSync(WEBAPP) ? walk(WEBAPP) : [];
+const ANDROID_SRC = join(ROOT, 'android', 'app', 'src');
 const failures = [];
 const rel = (p) => relative(ROOT, p).replace(/\\/g, '/');
 const fail = (msg) => failures.push(msg);
@@ -32,11 +34,14 @@ function walk(dir) {
   });
 }
 
+const androidFiles = existsSync(ANDROID_SRC) ? walk(ANDROID_SRC) : [];
+
 // 1. Syntax ---------------------------------------------------------------
 const jsFiles = [
   ...walk(EXT).filter((p) => extname(p) === '.js'),
   ...walk(SITE).filter((p) => extname(p) === '.js'),
   ...webappFiles.filter((p) => extname(p) === '.js'),
+  ...androidFiles.filter((p) => extname(p) === '.js'),
   ...walk(join(ROOT, 'scripts')).filter((p) => ['.js', '.mjs'].includes(extname(p)))
 ];
 for (const file of jsFiles) {
@@ -73,10 +78,10 @@ if (manifest) {
 }
 
 // 3. Leaks & emoji --------------------------------------------------------
-const TEXT_EXT = new Set(['.js', '.mjs', '.json', '.html', '.css', '.svg', '.md', '.webmanifest']);
+const TEXT_EXT = new Set(['.js', '.mjs', '.json', '.html', '.css', '.svg', '.md', '.webmanifest', '.java', '.xml', '.kts']);
 const forbidden = new RegExp(['neu' + 'mann', 'njsz' + 'ki'].join('|'), 'i');
 const emoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
-const textFiles = [...walk(EXT), ...walk(SITE), ...webappFiles].filter((p) => TEXT_EXT.has(extname(p)));
+const textFiles = [...walk(EXT), ...walk(SITE), ...webappFiles, ...androidFiles].filter((p) => TEXT_EXT.has(extname(p)));
 for (const file of textFiles) {
   const text = readFileSync(file, 'utf8');
   if (forbidden.test(text)) fail(`Branding leak in ${rel(file)}`);

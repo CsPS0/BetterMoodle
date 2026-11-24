@@ -1083,6 +1083,215 @@ html[data-mp-active="true"]:not([data-mp-theme="light"]) body.mp-overhaul-active
   filter: invert(0.85) hue-rotate(180deg);
 }
 
+/* File manager path bar: Moodle paints a black folder bitmap behind the text; swap for a currentColor glyph */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.filemanager, .file-picker) .fp-path-folder {
+  background-image: none !important;
+  padding-left: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+/* Moodle offsets the link 24px to clear its bitmap; the glyph sits in the flex gap instead */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.filemanager, .file-picker) .fp-path-folder .fp-path-folder-name {
+  margin-left: 0 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.filemanager, .file-picker) .fp-path-folder::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  background-color: var(--mp-text-muted);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* --------------------------------------------------------------------------
+   2D. YUI dialogues & the file picker (Állományválasztó)
+   These are appended to <body>, outside #region-main, so the page rules
+   never reach them. Moodle ships a white .fp-content, grey Bootstrap
+   .btn-secondary and a black close glyph: repaint all of it per preset.
+   -------------------------------------------------------------------------- */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base .moodle-dialogue-hd :is(h1, h2, h3, h4, h5, h6) {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base .moodle-dialogue-hd {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--mp-border) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base :is(.closebutton, .yui3-button.closebutton) {
+  color: var(--mp-text) !important;
+  opacity: 0.75 !important;
+  filter: none !important;
+  background-color: transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base :is(.closebutton, .yui3-button.closebutton):hover {
+  opacity: 1 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base .moodle-dialogue-bd {
+  background: var(--mp-surface) !important;
+  color: var(--mp-text) !important;
+}
+
+/* Secondary buttons inside dialogues & modals (toolbar, view switcher, Mégse) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.moodle-dialogue-base, .modal) .btn-secondary {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border-strong) !important;
+  color: var(--mp-text) !important;
+  box-shadow: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.moodle-dialogue-base, .modal) .btn-secondary:hover {
+  background: var(--mp-surface-hover) !important;
+  border-color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.moodle-dialogue-base, .modal) :is(.btn-secondary.checked, .btn-secondary.active, .btn-secondary[aria-pressed="true"]) {
+  background: var(--mp-accent-tint) !important;
+  border-color: var(--mp-accent) !important;
+  color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.moodle-dialogue-base, .modal) .btn-primary {
+  background: var(--mp-accent-fill) !important;
+  border-color: var(--mp-accent-fill) !important;
+  color: var(--accent-fg) !important;
+  box-shadow: none !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.moodle-dialogue-base, .modal) .btn:active {
+  transform: scale(0.97) !important;
+}
+
+/* Phones: Moodle makes the picker full screen; lift it above the BetterMoodle top bar
+   (z-index 10001) so its title and close button stay reachable */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .moodle-dialogue-base .moodle-dialogue-fullscreen {
+  z-index: 10010 !important;
+}
+
+/* Repository list (left column; stacked on top on phones, where Moodle fills it light grey) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-repo-area {
+  background: var(--mp-surface) !important;
+  border-color: var(--mp-border) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-repo :is(a, .nav-link) {
+  color: var(--mp-text-muted) !important;
+  border-radius: var(--mp-radius-inner) !important;
+  font-size: 13px !important;
+  background: transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-repo :is(a, .nav-link):hover {
+  background: var(--mp-surface-hover) !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-repo.active,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-list .fp-repo.active {
+  background: transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-repo.active :is(a, .nav-link) {
+  background: var(--mp-accent-tint) !important;
+  color: var(--mp-accent) !important;
+  font-weight: 600 !important;
+  box-shadow: inset 2px 0 0 var(--mp-accent) !important;
+}
+
+/* Toolbar / navbar strip */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-navbar {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-bottom: none !important;
+  border-radius: var(--mp-radius) var(--mp-radius) 0 0 !important;
+}
+
+/* Content well: the white box that made everything unreadable */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-content {
+  background: var(--mp-surface) !important;
+  color: var(--mp-text) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: 0 0 var(--mp-radius) var(--mp-radius) !important;
+}
+/* Moodle focuses the well programmatically on every tab switch; keep the ring but make it a hairline */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-content:focus-visible {
+  outline: 1px solid var(--mp-accent) !important;
+  outline-offset: -1px !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .fp-select) :is(.form-select, .custom-select, select, input.form-control:not([type="checkbox"]):not([type="radio"])) {
+  font-size: 13px !important;
+  min-height: 32px !important;
+  height: auto !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  line-height: 1.4 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-content :is(label, .col-form-label, legend, .form-label) {
+  color: var(--mp-text-muted) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker .fp-content :is(p, span, div, td, th) {
+  color: inherit;
+}
+
+/* Icon view tiles (recent files, private files) */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager, .fp-select) .fp-thumbnail {
+  background: var(--mp-surface-2) !important;
+  border: 1px solid var(--mp-border) !important;
+  border-radius: var(--mp-radius-inner) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) .fp-file:hover .fp-thumbnail,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) .fp-iconview .fp-thumbnail:hover {
+  background: var(--mp-surface-hover) !important;
+  border-color: var(--mp-accent) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager, .fp-select) .fp-thumbnail img {
+  border: none !important;
+  background: transparent !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) :is(.fp-filename, .fp-filename-field, .fp-filename-field a) {
+  color: var(--mp-text) !important;
+  font-size: 12px !important;
+  background: transparent !important;
+}
+/* Moodle's file-type icons are dark line art; lift them on dark presets (real image thumbnails stay untouched) */
+html[data-mp-active="true"]:not([data-mp-theme="light"]) body.mp-overhaul-active :is(.file-picker, .filemanager, .fp-select) :is(.fp-thumbnail, .fp-icon) img[src*="/theme/image.php"],
+html[data-mp-active="true"]:not([data-mp-theme="light"]) body.mp-overhaul-active :is(.file-picker, .fp-select) img.icon:not(.fp-repo-icon) {
+  filter: invert(0.88) hue-rotate(180deg) !important;
+}
+
+/* Details (table) view: YUI datatable rows ship white/grey fills */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) .yui3-datatable :is(table, thead, tbody, tr, th, td),
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) :is(.yui3-datatable-even, .yui3-datatable-odd) td {
+  background: transparent !important;
+  color: var(--mp-text) !important;
+  border-color: var(--mp-border) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) .yui3-datatable-columns th {
+  background: var(--mp-surface-2) !important;
+  color: var(--mp-text-muted) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) .yui3-datatable-data tr:hover td,
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) .yui3-datatable-selected td {
+  background: var(--mp-surface-hover) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.file-picker, .filemanager) .yui3-datatable-cell {
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Tree view & "select file" confirmation panel */
+:where(html[data-mp-active="true"]) body.mp-overhaul-active .file-picker :is(.ygtvitem, .ygtvcell, .ygtvlabel, .ygtvcontent) {
+  background-color: transparent !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.fp-select, .fp-dlg) {
+  background: var(--mp-surface) !important;
+  color: var(--mp-text) !important;
+}
+:where(html[data-mp-active="true"]) body.mp-overhaul-active :is(.fp-select, .fp-dlg) :is(label, .fp-file-info, .fp-fileinfo) {
+  color: var(--mp-text-muted) !important;
+}
+
 /* --------------------------------------------------------------------------
    3. Persistent Sidebar & Topbar Navigation
    -------------------------------------------------------------------------- */
@@ -1153,6 +1362,22 @@ html[data-mp-active="true"]:not([data-mp-theme="light"]) body.mp-overhaul-active
   }
   :where(html[data-mp-active="true"]) body[data-mp-nav="topbar"] #mp-sidebar.mp-sidebar-open {
     display: flex;
+  }
+}
+
+/* Phones: the brand already links to the dashboard, so drop the duplicate button and
+   collapse sign-out to its icon so the brand title and Testreszabás both fit */
+@media (max-width: 560px) {
+  :where(html[data-mp-active="true"]) #mp-mobile-topbar .mp-topbar-links > a.mp-btn {
+    display: none;
+  }
+  :where(html[data-mp-active="true"]) #mp-mobile-topbar #mp-topbar-logout-btn > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }
 
@@ -1862,6 +2087,30 @@ html[data-mp-active="true"] .mp-cal-week-row.is-today {
 @media (max-width: 680px) {
   html[data-mp-active="true"] .mp-cal-week-row {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Phones: a 7-column month grid leaves ~50px per day, which cuts event pills to "23:00 I".
+   Show the day number + event dot only; tapping the day opens its full list below. */
+@media (max-width: 600px) {
+  html[data-mp-active="true"] .mp-cal-day-cell,
+  html[data-mp-active="true"] body[data-mp-density="compact"] .mp-cal-day-cell {
+    min-height: 48px;
+    padding: 4px 2px;
+    align-items: center;
+  }
+  html[data-mp-active="true"] .mp-cal-day-top {
+    flex-direction: column;
+    gap: 3px;
+  }
+  html[data-mp-active="true"] .mp-cal-day-num {
+    min-width: 32px;
+    min-height: 28px;
+    padding: 4px;
+  }
+  html[data-mp-active="true"] .mp-cal-day-events,
+  html[data-mp-active="true"] .mp-cal-more-btn {
+    display: none;
   }
 }
 

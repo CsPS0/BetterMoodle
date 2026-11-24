@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="change_site"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_change_site_short"
+        android:shortcutLongLabel="@string/shortcut_change_site_long">
+        <intent
+            android:action="io.github.csps0.bettermoodle.CHANGE_SITE"
+            android:targetPackage="io.github.csps0.bettermoodle"
+            android:targetClass="io.github.csps0.bettermoodle.MainActivity" />
+    </shortcut>
+</shortcuts>
